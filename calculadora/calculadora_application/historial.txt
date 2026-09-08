@@ -1,0 +1,52 @@
+
+  Id     Duration CommandLine
+  --     -------- -----------
+   1        0.335 try { . "c:\Users\ANDREA MEDINA\AppData\Local\Programs\Microsoft VS Code\08d4889f9e\reso…
+   2        0.185 git init
+   3        0.049 echo "build/…
+   4        0.559 git add .
+   5        0.879 git commit -m "feat: calculadora de propinas nativa "
+   6        0.098 git branch -M main
+   7        0.103 git remote add origin https://github.com/amedinap-pico/Calculadora.git
+   8       23.009 git push -u origin main
+   9        0.118 git status
+  10        0.248 git branch
+  11        0.071 git status
+  12        0.146 git branch
+  13        0.102 git switch branch nombre/route
+  14        0.124 git switch -c  nombre/route
+  15        0.153 git branch
+  16        0.148 git swtich main
+  17        0.102 git switch main
+  18        0.145 git branch
+  19        0.105 git switch nombre/route
+  20        0.133 git branch
+  21        0.104 git btsnch
+  22        0.161 git branch
+  23        0.118 git switch main 
+  24        0.160 git branch
+  25        0.123 git merge feature
+  26        0.100 git merge nombre/route
+  27        0.075 git status
+  28        0.105 git commit -m "Merge"
+  29        0.070 git status
+  30        0.089 git merge name/route
+  31        0.175 git push origin name
+  32        5.881 git push origin main
+  33        0.121 git status
+  34        0.294 git branch
+  35        7.167 flutter run 
+  36        0.024 cd calculadora_application
+  37     2:49.074 flutter run 
+  38     2:09.918 flutter run 
+  39        0.100 git merge nombre/route
+  40        2.426 git push origin main
+  41        0.170 git log --graph --oneline -n 5
+  42        0.158 git branch --merged
+  43        0.070 git status
+  44        0.102 git add .
+  45        0.163 git commit -m "feat: integracion de rutas y vista de red en main"
+  46        2.769 git push origin main
+  47        0.072 git status
+  48        0.068 git status
+
