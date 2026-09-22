@@ -47,12 +47,8 @@ class UsuariosScreen extends StatelessWidget {
               return Card(
                 child: ListTile(
                   leading: CircleAvatar(child: Text('${usuario.id}')),
-                  title: Text(usuario.name),
-                  subtitle: Text(
-                    '${usuario.email}\n'
-                    '${usuario.city}, ${usuario.street}',
-                  ),
-                  isThreeLine: true,
+                  title: Text(usuario.nombre),
+                  subtitle: Text(usuario.email),
                 ),
               );
             },

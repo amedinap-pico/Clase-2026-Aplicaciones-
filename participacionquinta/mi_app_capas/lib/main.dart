@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'data/repositories/usuario_api.dart';
+import 'data/repositories/usuario_memoria.dart';
 import 'domain/usecases/obtener_usuarios_con_vocal.dart';
 import 'presentation/screens/usuarios_screen.dart';
+
 void main() {
-  const usuarioApi = UsuarioApi();
-  final obtenerUsuariosConVocal = ObtenerUsuariosConVocal(usuarioApi);
+  const usuarioMemoria = UsuarioMemoria();
+  final obtenerUsuariosConVocal = ObtenerUsuariosConVocal(usuarioMemoria);
 
   runApp(UsuariosApp(obtenerUsuariosConVocal: obtenerUsuariosConVocal));
 }
