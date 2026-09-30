@@ -1,56 +1,55 @@
 # Respuestas — Participación Semana 7
 
-> Borrador actualizado con la evidencia disponible en el repositorio. Las respuestas marcadas como pendientes requieren datos personales o verificaciones que este entorno no permitió completar. La entrega pide que este archivo quede en `main`.
-
 ## 1. Comparación de las ramas
 
-**Agente:** Codex. La variante exacta del modelo y el nivel de razonamiento no aparecen en los commits, por lo que debo completarlos desde la configuración de mi sesión. **Instrucciones:** `AGENTS.md` en la raíz de `divisor_cuenta`. **Caso Git:** C; `git rev-parse --show-toplevel` devuelve `C:/Clase 2026 Aplicaciones/Clase-2026-Aplicaciones-`, una carpeta que contiene más proyectos. `main`, `vibe` y `sdd` comparten el commit inicial `47017254f40ecfd15cbe6bfa02bb6e39555e630e`.
+**Agente:** Codex. **Modelo y nivel de razonamiento usados en las sesiones originales:** no quedaron registrados en los artefactos ni en el historial disponible. **Instrucciones:** `AGENTS.md`. **Caso Git:** C; el repositorio está en una carpeta superior que contiene otros proyectos. `main`, `vibe` y `sdd` parten del commit `47017254f40ecfd15cbe6bfa02bb6e39555e630e`.
 
 | Métrica | vibe | sdd |
 |---|---:|---:|
-| Iteraciones del estudiante | Pendiente: no hay registro completo de la conversación original | Pendiente: no hay registro completo de la conversación original |
-| Escenarios de aceptación | Pendiente: falta probar los seis manualmente | Seis casos de dominio escritos; cuatro resultados válidos y dos errores también pasaron una comprobación Dart directa. La suite Flutter no se pudo ejecutar aquí. |
-| Pruebas automatizadas que pasan | Pendiente: no se ejecutó la suite en esta rama | Según el reporte de la estudiante, las pruebas de `sdd` pasaron en su terminal; no se conservó aquí la salida del comando. |
+| Iteraciones del estudiante | No registradas | No registradas |
+| Casos de aceptación | No ejecutados manualmente en esta revisión | Los seis están implementados como casos de dominio |
+| Pruebas automatizadas | No ejecutadas con la suite de `sdd` en esta revisión | La estudiante reportó que `flutter test` pasó en su terminal; aquí no se conservó la salida |
 | Archivos Dart en `lib/` | 1 | 11 |
 | Líneas Dart en `lib/` | 354 | 221 |
-| `domain/` depende de Flutter | Sí: la lógica está en `lib/main.dart` junto con Flutter | No: `rg "package:flutter" lib/domain` no devuelve coincidencias. |
-| Separación presentation/domain/data | No | Sí |
-| ¿Agregó algo que nadie pidió? | No se identificó funcionalidad de producto adicional | No se identificó funcionalidad adicional; las estrategias y artefactos SDD se piden en la guía. |
-| ¿Se puede agregar una estrategia sin modificar el cálculo? | No hay estrategia separada | Sí: `CalcularDivision` recibe `EstrategiaRedondeo`; las implementaciones están en `lib/data/`. |
+| ¿`domain/` depende de Flutter? | No hay capa `domain`; pantalla y lógica están en `lib/main.dart` | No; la búsqueda en `lib/domain/` no encuentra imports Flutter |
+| ¿Existe separación presentation/domain/data? | No | Sí |
+| ¿Agregó una función de producto no solicitada? | No se identificó | No se identificó; los artefactos SDD y las estrategias forman parte de la actividad |
+| ¿Se puede agregar otra estrategia sin modificar el cálculo? | No hay contrato de estrategia | Sí, mediante `EstrategiaRedondeo` |
 | Tiempo aproximado | No registrado | No registrado |
 
-La rama `sdd` hace explícitos los requisitos, las validaciones, los modos de redondeo y las capas. En `vibe`, el pedido inicial breve dejó esas decisiones al agente. No puedo reconstruir el número de iteraciones ni asegurar que se usó exactamente el mismo modelo y configuración en ambas ramas.
+Los requisitos y límites arquitectónicos quedaron explícitos en los artefactos SDD. En `vibe`, el pedido inicial dejó más decisiones de interfaz y estructura al agente. Con la evidencia disponible, `sdd` ofrece pruebas automatizadas y estructura para evaluar los seis escenarios, pero no puedo afirmar una comparación funcional completa porque los seis casos de `vibe` no se ejecutaron aquí.
 
 ## 2. Pruebas de `sdd` en `vibe`
 
-Pendiente. No cambié a `vibe` porque el repositorio Git está en la carpeta superior que contiene otros trabajos y tiene cambios ajenos en el árbol. Flutter no pudo escribir en `C:\flutter\flutter\bin\cache` desde este agente; por ello no puedo informar si las pruebas compilaron en `vibe` ni pegar un error de compilación observado. La estudiante informa que las pruebas de `sdd` pasaron; los escenarios de `vibe` todavía no se comprobaron aquí.
+No se ejecutó el traslado de la suite ni se guardó un primer error de compilación. La inspección estática muestra que `test/division_test.dart` importa `package:divisor_cuenta/domain/...`, y que la rama `vibe` no contiene esos archivos de dominio. Por eso, es esperable que la compilación falle por imports/clases ausentes; esta explicación es una inferencia del código, no una salida observada. No demuestra por sí sola un fallo funcional. Los seis escenarios deben probarse manualmente en `vibe` y sus resultados registrarse antes de cerrar esta comparación.
 
 ## 3. Verificaciones SOLID
 
-En el código actual de `sdd`, `domain` no importa Flutter. La estrategia es una interfaz de un método; el caso de uso no pregunta el tipo de estrategia ni contiene validación o formato. `main.dart` crea `RedondeoExacto` y `RedondeoHaciaArriba`. El analizador Dart informó `No issues found` para `lib` y `test`.
+En `sdd`, las búsquedas estáticas dieron estos resultados:
 
-La rama `vibe` concentra pantalla y lógica en `lib/main.dart`: no tiene capas de dominio ni contrato de estrategia, por lo que SRP, OCP, ISP y DIP no quedan demostrados; LSP no aplica porque no hay implementaciones sustituibles. Falta ejecutar y guardar las salidas comparables de las búsquedas de la Parte 9.5 para ambas ramas.
+- `git grep -n 'package:flutter' sdd -- divisor_cuenta/lib/domain`: sin coincidencias.
+- `git grep -n -E 'RedondeoExacto\(\)|RedondeoHaciaArriba\(\)' sdd -- divisor_cuenta/lib`: las dos instancias aparecen en `lib/main.dart`.
+- `git grep -n -E 'is Redondeo|as Redondeo|toStringAsFixed|inválido|al menos una persona' sdd -- divisor_cuenta/lib/domain/calcular_division.dart`: sin coincidencias.
 
-La Constitution registra los cinco principios SOLID. Sin embargo, su texto SRP y los artefactos `plan.md`/`tasks.md` todavía describen la implementación anterior de propinas 10/15/20. Deben alinearse con la spec de Semana 7 antes de declarar completa la revisión SDD.
+En `vibe`, la lógica está junto con los widgets en `lib/main.dart` y no hay `domain/` ni contrato de estrategia. Por eso, SRP y DIP no quedan demostrados por una separación de capas; OCP y LSP no tienen estrategias sustituibles que verificar. La Constitución de `sdd` prescribe responsabilidades separadas, extensión por estrategias, implementaciones sustituibles, contratos pequeños y dependencias dirigidas hacia el dominio.
 
 ## 4. Clarificaciones
 
-No encontré una transcripción de `/speckit-clarify`, así que no puedo inventar qué preguntas hizo. La spec define explícitamente el botón Calcular, el porcentaje ingresado, el modo exacto o hacia arriba, los mensajes de error y los seis escenarios. En `vibe`, esas decisiones se dejaron al agente salvo que la estudiante recuerde haberlas especificado en la conversación original.
+No hay una transcripción de `/speckit-clarify`, así que no puedo citar preguntas textuales. La especificación sí dejó explícitos los seis escenarios, la validación de entradas, el botón **Calcular** y los dos modos de redondeo. Tampoco hay un registro de la conversación original de `vibe` que permita saber qué decisiones especificó la estudiante y cuáles tomó el agente; atribuirlas sería inventar evidencia.
 
 ## 5. Diferencias entre ramas
 
-La comparación de commits muestra que `sdd` agregó Spec Kit, especificación, plan, tareas y separación por capas; `vibe` tiene una implementación monolítica de 354 líneas en `lib/main.dart`. No identifiqué una función de producto fuera del alcance. El `git diff --stat` final debe volver a capturarse después de consolidar los cambios actuales.
+`git diff vibe sdd --stat -- divisor_cuenta` muestra 52 archivos, 5.442 inserciones y 390 eliminaciones. Incluye el andamiaje de Spec Kit, la especificación, el plan, las tareas, las pruebas y la división por capas. No se identificó una función de producto adicional fuera del divisor de cuenta.
 
 ## 6. Otra herramienta SDD y cuándo elegir vibe
 
-OpenSpec organiza cada cambio como una propuesta con especificaciones incrementales, diseño y tareas. Al archivarlo, integra los cambios de requisitos en las especificaciones principales y conserva la carpeta del cambio como historial. Lo preferiría en un proyecto de equipo con especificaciones vivas y varios cambios revisables en paralelo. [Documentación oficial de OpenSpec](https://openspec.dev/docs/quickstart) y [conceptos y archivo](https://github.com/Fission-AI/OpenSpec/blob/main/docs/concepts.md).
+OpenSpec organiza los cambios como propuestas con especificaciones, diseño y tareas; al archivarlos, integra los requisitos actualizados y conserva el historial del cambio. Lo preferiría en un proyecto de equipo con especificaciones vivas y cambios revisados de forma incremental. [Guía de OpenSpec](https://openspec.dev/docs/quickstart) y [conceptos de OpenSpec](https://github.com/Fission-AI/OpenSpec/blob/main/docs/concepts.md).
 
-Elegiría vibe para explorar en pocas horas un prototipo desechable de una pantalla, cuando todavía se está definiendo el problema y se acepta rehacerlo. No lo elegiría como única documentación para una funcionalidad de producción que varias personas deban mantener.
+Elegiría vibe para explorar un prototipo pequeño y desechable mientras se define el problema, si se acepta rehacerlo y no se necesita mantenerlo a largo plazo.
 
-## Pendiente antes de entregar
+## Pendiente para una comparación completa
 
-- Completar modelo/configuración e iteraciones a partir de la sesión real.
-- Alinear `plan.md`, `tasks.md` y la Constitution con la spec de Semana 7. La edición de esos archivos fue rechazada por el revisor automático porque no pudo acceder al modelo de revisión.
-- Guardar la salida de `flutter test` informado como exitoso y ejecutar/comprobar `flutter analyze` y `flutter build apk --debug`. Este agente no puede escribir en `C:\flutter\flutter\bin\cache`; `dart analyze lib test` sí terminó con `No issues found`.
-- Ejecutar las mismas pruebas y los seis escenarios manuales en `vibe`, completar la evidencia de Parte 10 y restaurar `test/` a su estado original.
-- Mover este borrador a `main` y subir las tres ramas después de aislar el repositorio de los otros proyectos. No se hizo `checkout`, commit ni push para evitar alterar el repositorio compartido.
+- Completar modelo/configuración, iteraciones y decisiones de la conversación original desde el historial personal.
+- Ejecutar y guardar las verificaciones de Flutter y los seis escenarios manuales de `vibe`.
+- Registrar el resultado de intentar usar allí las pruebas de `sdd`.
+- Copiar este archivo a `main` y publicar `vibe`; actualmente la respuesta está en `sdd` y el remoto no tiene `origin/vibe`.
