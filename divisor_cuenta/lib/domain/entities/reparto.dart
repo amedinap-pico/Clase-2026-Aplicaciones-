@@ -5,8 +5,9 @@ class Reparto {
     required this.propinaCentavos,
     required this.totalCentavos,
     required List<int> pagosIndividualesCentavos,
-  }) : pagosIndividualesCentavos =
-           List<int>.unmodifiable(pagosIndividualesCentavos);
+  }) : pagosIndividualesCentavos = List<int>.unmodifiable(
+         pagosIndividualesCentavos,
+       );
 
   final int cantidadPersonas;
   final int propinaCentavos;

@@ -1,30 +1,66 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:divisor_cuenta/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('calcula el reparto y actualiza la propina seleccionada', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const AplicacionDivisorCuenta());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Dividir cuenta'), findsOneWidget);
+    expect(find.text('10%'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.enterText(find.byType(TextField).at(0), '120');
+    await tester.enterText(find.byType(TextField).at(1), '3');
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('132,00'), findsOneWidget);
+    expect(find.text('44,00'), findsNWidgets(3));
+
+    await tester.tap(find.text('15%'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Propina (15%)'), findsOneWidget);
+    expect(find.text('138,00'), findsOneWidget);
+    expect(find.text('46,00'), findsNWidgets(3));
+
+    await tester.tap(find.text('20%'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Propina (20%)'), findsOneWidget);
+    expect(find.text('144,00'), findsOneWidget);
+    expect(find.text('48,00'), findsNWidgets(3));
+  });
+
+  testWidgets('muestra un mensaje y oculta el reparto para un dato inválido', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const AplicacionDivisorCuenta());
+
+    await tester.enterText(find.byType(TextField).at(0), '-5');
+    await tester.enterText(find.byType(TextField).at(1), '2');
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('El monto de la cuenta no puede ser negativo.'),
+      findsOneWidget,
+    );
+    expect(find.text('Total con propina'), findsNothing);
+  });
+
+  testWidgets('distribuye los centavos residuales sin perder el total', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const AplicacionDivisorCuenta());
+
+    await tester.enterText(find.byType(TextField).at(0), '10');
+    await tester.enterText(find.byType(TextField).at(1), '3');
+    await tester.pumpAndSettle();
+
+    expect(find.text('11,00'), findsOneWidget);
+    expect(find.text('3,67'), findsNWidgets(2));
+    expect(find.text('3,66'), findsOneWidget);
   });
 }
