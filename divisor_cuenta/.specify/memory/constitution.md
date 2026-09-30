@@ -1,50 +1,38 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Constitución del divisor de cuenta
 
-## Core Principles
+## Principios
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Responsabilidad única (SRP)
+Cada clase y archivo tendrá una responsabilidad principal. La interfaz recogerá entradas y mostrará resultados; las entidades representarán datos; el servicio de dominio validará y calculará el reparto. No se mezclarán widgets con reglas monetarias.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Abierto/cerrado (OCP)
+Las reglas de cálculo se ampliarán mediante una estrategia o implementación nueva cuando cambie una política variable, sin editar la política existente. La interfaz dependerá del contrato necesario y no codificará algoritmos de redondeo.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Sustitución de Liskov (LSP)
+Cualquier implementación de una abstracción de cálculo aceptará las mismas entradas válidas, respetará sus precondiciones y devolverá un reparto cuya suma sea el total. Ninguna implementación debilitará esas garantías.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Segregación de interfaces (ISP)
+Las abstracciones expondrán solo las operaciones que necesita quien las consume. No se crearán interfaces genéricas con métodos ajenos al cálculo de una cuenta.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Inversión de dependencias (DIP)
+La presentación dependerá de contratos y entidades del dominio. El dominio no importará Flutter ni dependerá de presentación o datos. Las dependencias apuntarán hacia el dominio.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Restricciones técnicas
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Usar Flutter y Dart con null safety, y nombres de clases, variables y métodos en español.
+- No incorporar dependencias externas sin autorización.
+- Mantener el código en `lib/presentation`, `lib/domain` y `lib/data` cuando corresponda. No crear infraestructura de datos sin una fuente externa que la justifique.
+- Representar dinero en centavos enteros. La suma de pagos individuales debe coincidir con el total y la diferencia máxima entre pagos será un centavo.
+- No modificar `test/`, `android/` ni `ios/` salvo solicitud expresa.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Flujo y control de calidad
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- La especificación define el comportamiento observable; el plan define la arquitectura; las tareas registran el avance.
+- Antes de cerrar un cambio se revisarán los criterios de aceptación y la dirección de dependencias.
+- Ejecutar `flutter analyze` y `flutter test` al verificar una implementación, respetando los límites de modificación de pruebas.
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+## Gobierno
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Esta Constitución rige las decisiones de implementación de esta aplicación. Si una decisión futura contradice un principio, se actualizará esta Constitución y se explicará la excepción en el plan antes de implementar.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Versión**: 1.0.0 | **Ratificada**: 2026-09-30 | **Última modificación**: 2026-09-30
