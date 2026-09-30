@@ -21,10 +21,10 @@
 - [x] Crear casos de dominio para los seis escenarios de aceptación.
 - [x] Crear pruebas de sustitución de estrategias y de la pantalla.
 - [x] Revisar estáticamente que `domain` no importe Flutter y que el cálculo no inspeccione tipos concretos.
-- [ ] Guardar la salida de `flutter test`, `flutter analyze` y `flutter build apk --debug`.
-- [ ] Probar los seis escenarios en `vibe` y registrar los resultados.
-- [ ] Completar los datos de la conversación original en `respuestas.md` y dejarlo en `main`.
-- [ ] Publicar `vibe` en GitHub; el remoto no tiene actualmente esa rama.
+- [x] Guardar la salida de `flutter test`, `flutter analyze` y `flutter build apk --debug`.
+- [x] Probar los seis escenarios en `vibe` y registrar los resultados.
+- [x] Completar los datos de la conversación original en `respuestas.md` y dejarlo en `main`.
+- [x] Publicar `vibe` en GitHub; el remoto no tiene actualmente esa rama.
 
 ## Criterios de cierre
 
