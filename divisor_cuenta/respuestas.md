@@ -10,7 +10,7 @@
 |---|---:|---:|
 | Iteraciones del estudiante | Pendiente: no hay registro completo de la conversación original | Pendiente: no hay registro completo de la conversación original |
 | Escenarios de aceptación | Pendiente: falta probar los seis manualmente | Seis casos de dominio escritos; cuatro resultados válidos y dos errores también pasaron una comprobación Dart directa. La suite Flutter no se pudo ejecutar aquí. |
-| Pruebas automatizadas que pasan | Pendiente: no se ejecutó la suite en esta rama | Sin confirmar: `flutter test` no pudo acceder a la caché del SDK Flutter. |
+| Pruebas automatizadas que pasan | Pendiente: no se ejecutó la suite en esta rama | Según el reporte de la estudiante, las pruebas de `sdd` pasaron en su terminal; no se conservó aquí la salida del comando. |
 | Archivos Dart en `lib/` | 1 | 11 |
 | Líneas Dart en `lib/` | 354 | 221 |
 | `domain/` depende de Flutter | Sí: la lógica está en `lib/main.dart` junto con Flutter | No: `rg "package:flutter" lib/domain` no devuelve coincidencias. |
@@ -23,7 +23,7 @@ La rama `sdd` hace explícitos los requisitos, las validaciones, los modos de re
 
 ## 2. Pruebas de `sdd` en `vibe`
 
-Pendiente. No cambié a `vibe` porque el repositorio Git está en la carpeta superior que contiene otros trabajos y tiene cambios ajenos en el árbol. Además, Flutter no pudo escribir en `C:\flutter\flutter\bin\cache`; por ello no puedo informar si las pruebas compilaron ni pegar un error de compilación de la rama `vibe`. Los escenarios de la spec sí se comprobaron en el dominio de `sdd` con un script Dart directo, pero no se ejecutaron manualmente en la interfaz.
+Pendiente. No cambié a `vibe` porque el repositorio Git está en la carpeta superior que contiene otros trabajos y tiene cambios ajenos en el árbol. Flutter no pudo escribir en `C:\flutter\flutter\bin\cache` desde este agente; por ello no puedo informar si las pruebas compilaron en `vibe` ni pegar un error de compilación observado. La estudiante informa que las pruebas de `sdd` pasaron; los escenarios de `vibe` todavía no se comprobaron aquí.
 
 ## 3. Verificaciones SOLID
 
@@ -51,6 +51,6 @@ Elegiría vibe para explorar en pocas horas un prototipo desechable de una panta
 
 - Completar modelo/configuración e iteraciones a partir de la sesión real.
 - Alinear `plan.md`, `tasks.md` y la Constitution con la spec de Semana 7. La edición de esos archivos fue rechazada por el revisor automático porque no pudo acceder al modelo de revisión.
-- Ejecutar `flutter test`, `flutter analyze` y `flutter build apk --debug` en un Flutter SDK con caché escribible. En este entorno el SDK está en `C:\flutter\flutter`, fuera de las rutas de escritura; `flutter test` falla al crear archivos de caché. `dart analyze lib test` sí terminó con `No issues found`.
+- Guardar la salida de `flutter test` informado como exitoso y ejecutar/comprobar `flutter analyze` y `flutter build apk --debug`. Este agente no puede escribir en `C:\flutter\flutter\bin\cache`; `dart analyze lib test` sí terminó con `No issues found`.
 - Ejecutar las mismas pruebas y los seis escenarios manuales en `vibe`, completar la evidencia de Parte 10 y restaurar `test/` a su estado original.
 - Mover este borrador a `main` y subir las tres ramas después de aislar el repositorio de los otros proyectos. No se hizo `checkout`, commit ni push para evitar alterar el repositorio compartido.
