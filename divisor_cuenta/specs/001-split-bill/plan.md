@@ -27,6 +27,7 @@ La dirección de dependencias es `presentation -> domain <- data`. `domain` no i
 - El monto y la propina deben ser numéricos, finitos y no negativos. Debe haber al menos una persona.
 - Se calcula primero el total con propina; después se divide entre las personas y se aplica la estrategia seleccionada.
 - El modo exacto redondea el pago a dos decimales. El modo hacia arriba redondea al entero monetario siguiente.
+- `Resultado` contiene una sola cuota por persona y no una lista de asignaciones. No se redistribuyen residuos: al redondear hacia arriba, la suma cobrada puede superar el total de la cuenta (por ejemplo, 10.00 entre 3 personas produce 4.00 por persona, 12.00 en total).
 - La pantalla calcula al pulsar **Calcular** y no presenta un resultado si los datos son inválidos.
 - El resultado visible usa dos decimales.
 

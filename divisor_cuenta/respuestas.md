@@ -19,6 +19,8 @@
 
 Los requisitos y límites arquitectónicos quedaron explícitos en los artefactos SDD. En `vibe`, el pedido inicial dejó más decisiones de interfaz y estructura al agente. Con la evidencia disponible, `sdd` ofrece pruebas automatizadas y estructura para evaluar los seis escenarios, pero no puedo afirmar una comparación funcional completa porque los seis casos de `vibe` no se ejecutaron aquí.
 
+La cuota es un único importe por persona, no un reparto individual de residuos. Así, 10.00 entre 3 da 4.00 por persona en modo hacia arriba y el cobro agregado sería 12.00; no se ajusta a 10.00. La spec y la Constitution se actualizaron para declarar esta conducta y no prometer conservación del total en esa estrategia.
+
 ## 2. Pruebas de `sdd` en `vibe`
 
 No se ejecutó el traslado de la suite ni se guardó un primer error de compilación. La inspección estática muestra que `test/division_test.dart` importa `package:divisor_cuenta/domain/...`, y que la rama `vibe` no contiene esos archivos de dominio. Por eso, es esperable que la compilación falle por imports/clases ausentes; esta explicación es una inferencia del código, no una salida observada. No demuestra por sí sola un fallo funcional. Los seis escenarios deben probarse manualmente en `vibe` y sus resultados registrarse antes de cerrar esta comparación.

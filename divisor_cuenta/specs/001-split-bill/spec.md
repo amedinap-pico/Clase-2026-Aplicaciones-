@@ -21,6 +21,7 @@ Una pantalla permite ingresar el monto, el número de personas y el porcentaje d
 - Una sola pantalla tiene campos para monto, personas y porcentaje de propina, selector de redondeo y botón Calcular.
 - El modo exacto redondea el pago individual al centavo más cercano.
 - El modo hacia arriba redondea el pago individual al entero monetario siguiente.
+- El resultado representa una cuota por persona, no una asignación de pagos individuales con ajuste de residuos. Por ello, la suma de las cuotas puede diferir del monto total: en modo exacto puede diferir por el redondeo al centavo y en modo hacia arriba puede superar el total. Para 10.00 dividido entre 3, el modo hacia arriba muestra 4.00 por persona (12.00 en total si las tres personas pagan esa cuota); no se descuentan centavos ni se redistribuye el residuo.
 - Monto y propina deben ser numéricos, finitos y no negativos; personas debe ser entero positivo.
 - Ante datos inválidos se muestra un mensaje y no se presenta ningún resultado.
 - El formato visible del resultado usa dos decimales.
