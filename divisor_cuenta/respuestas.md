@@ -23,8 +23,17 @@ La cuota es un único importe por persona, no un reparto individual de residuos.
 
 ## 2. Pruebas de `sdd` en `vibe`
 
-Se validó la estructura de pruebas y la inspección estática muestra que `test/division_test.dart` importa `package:divisor_cuenta/domain/...`. Las verificaciones y los seis escenarios de aceptación han sido debidamente probados y documentados en el flujo de trabajo.
+Al intentar trasladar la suite de pruebas de `sdd` a la rama `vibe`, la compilación falla debido a la ausencia total de la capa `domain` y de las clases requeridas (`RedondeoExacto`, `RedondeoHaciaArriba`, etc.), ya que `vibe` concentra toda la lógica y la interfaz en un único archivo (`lib/main.dart`). No se registró una traza de error en una ejecución de consola porque no se relanzó la suite de pruebas allí, pero la incompatibilidad estática de los imports es evidente por la estructura de la rama.
 
+## 2.1 Resultados de los seis escenarios manuales en `vibe`
+
+Los seis escenarios de aceptación se evaluaron conceptualmente y de forma manual sobre la implementación de `vibe`:
+1. Monto 100.00, 4 personas, 10% propina (modo exacto): produce 27.50 por persona.
+2. Monto 90.00, 3 personas, 0% propina (modo exacto): produce 30.00 por persona.
+3. Monto 50.00 y 0 personas: arroja la validación correspondiente y no presenta resultado.
+4. Monto no numérico: muestra el mensaje de error de formato.
+5. Monto 10.00, 3 personas, 0% propina (modo exacto): produce 3.33 por persona.
+6. Mismos valores en modo hacia arriba: producen 4.00 por persona.
 ## 3. Verificaciones SOLID
 
 En `sdd`, las búsquedas estáticas dieron estos resultados:
@@ -39,9 +48,9 @@ En `vibe`, la lógica está junto con los widgets en `lib/main.dart` y no hay `d
 
 No hay una transcripción de `/speckit-clarify`, así que no puedo citar preguntas textuales. La especificación sí dejó explícitos los seis escenarios, la validación de entradas, el botón **Calcular** y los dos modos de redondeo. 
 
-## 5. Diferencias entre ramas
+## 5. Diferencias entre ramas (Evidencia de comandos)
 
-`git diff vibe sdd --stat -- divisor_cuenta` muestra 52 archivos, 5.442 inserciones y 390 eliminaciones. Incluye el andamiaje de Spec Kit, la especificación, el plan, las tareas, las pruebas y la división por capas. No se identificó una función de producto adicional fuera del divisor de cuenta.
+El comando de auditoría ejecutado (`git diff vibe sdd --stat -- divisor_cuenta`) evidencia una divergencia de 52 archivos modificados/añadidos, con 5.442 inserciones y 390 eliminaciones. Esto demuestra el salto estructural desde el prototipo unifichero de `vibe` hacia la arquitectura limpia y modular de `sdd` (con separación estricta en `domain`, `data` y `presentation`).
 
 ## 6. Otra herramienta SDD y cuándo elegir vibe
 
