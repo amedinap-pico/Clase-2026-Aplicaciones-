@@ -22,7 +22,7 @@
 - [x] Crear pruebas de sustitución de estrategias y de la pantalla.
 - [x] Revisar estáticamente que `domain` no importe Flutter y que el cálculo no inspeccione tipos concretos.
 - [x] Guardar la salida de `flutter test`, `flutter analyze` y `flutter build apk --debug`.
-- [x ] Probar los seis escenarios en `vibe` y registrar los resultados.
+- [x] Probar los seis escenarios en `vibe` y registrar los resultados.
 - [x] Completar `respuestas.md` con datos personales, evidencia de ambas ramas y dejarlo en `main`.
 - [x] Publicar las ramas requeridas en GitHub.
 
