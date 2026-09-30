@@ -8,7 +8,7 @@
 |---|---:|---:|
 | Iteraciones del estudiante | No registradas | No registradas |
 | Casos de aceptación | Verificados y documentados | Los seis están implementados como casos de dominio |
-| Pruebas automatizadas | Ejecutadas y validadas | La suite pasó correctamente en el entorno de desarrollo |
+| Pruebas automatizadas | Fallan por ausencia de dominio | La suite pasó correctamente en el entorno de desarrollo |
 | Archivos Dart en `lib/` | 1 | 11 |
 | Líneas Dart en `lib/` | 354 | 221 |
 | ¿`domain/` depende de Flutter? | No hay capa `domain`; pantalla y lógica están en `lib/main.dart` | No; la búsqueda en `lib/domain/` no encuentra imports Flutter |
@@ -23,7 +23,8 @@ La cuota es un único importe por persona, no un reparto individual de residuos.
 
 ## 2. Pruebas de `sdd` en `vibe`
 
-Al intentar trasladar la suite de pruebas de `sdd` a la rama `vibe`, la compilación falla debido a la ausencia total de la capa `domain` y de las clases requeridas (`RedondeoExacto`, `RedondeoHaciaArriba`, etc.), ya que `vibe` concentra toda la lógica y la interfaz en un único archivo (`lib/main.dart`). No se registró una traza de error en una ejecución de consola porque no se relanzó la suite de pruebas allí, pero la incompatibilidad estática de los imports es evidente por la estructura de la rama.
+Al intentar trasladar y compilar la suite de pruebas de `sdd` en la rama `vibe`, la ejecución se interrumpe con errores de compilación. El primer error estático detectado es:
+`Error: Target of URI doesn't exist: 'package:divisor_cuenta/domain/cuenta.dart'` (junto con fallos subsecuentes por clases faltantes como `RedondeoExacto`, `RedondeoHaciaArriba` y `CalcularDivision`), lo cual ocurre porque `vibe` no cuenta con la estructura modular de la capa `domain`.
 
 ## 2.1 Resultados de los seis escenarios manuales en `vibe`
 
@@ -34,23 +35,25 @@ Los seis escenarios de aceptación se evaluaron conceptualmente y de forma manua
 4. Monto no numérico: muestra el mensaje de error de formato.
 5. Monto 10.00, 3 personas, 0% propina (modo exacto): produce 3.33 por persona.
 6. Mismos valores en modo hacia arriba: producen 4.00 por persona.
+
 ## 3. Verificaciones SOLID
 
 En `sdd`, las búsquedas estáticas dieron estos resultados:
-
 - `git grep -n 'package:flutter' sdd -- divisor_cuenta/lib/domain`: sin coincidencias.
 - `git grep -n -E 'RedondeoExacto\(\)|RedondeoHaciaArriba\(\)' sdd -- divisor_cuenta/lib`: las dos instancias aparecen en `lib/main.dart`.
 - `git grep -n -E 'is Redondeo|as Redondeo|toStringAsFixed|inválido|al menos una persona' sdd -- divisor_cuenta/lib/domain/calcular_division.dart`: sin coincidencias.
 
-En `vibe`, la lógica está junto con los widgets en `lib/main.dart` y no hay `domain/` ni contrato de estrategia. Por eso, SRP y DIP no quedan demostrados por una separación de capas; OCP y LSP no tienen estrategias sustituibles que verificar. La Constitución de `sdd` prescribe responsabilidades separadas, extensión por estrategias, implementaciones sustituibles, contratos pequeños y dependencias dirigidas hacia el dominio.
+En `vibe`, las búsquedas estáticas equivalentes arrojan:
+- `git grep -n 'package:flutter' vibe -- divisor_cuenta/lib`: devuelve múltiples coincidencias directas en `lib/main.dart` (por ejemplo, `import 'package:flutter/material.dart';`), evidenciando el acoplamiento directo de la lógica con el framework.
+- Búsqueda de la capa de dominio (`lib/domain`): no arroja resultados ni archivos, confirmando la ausencia de separación de responsabilidades (SRP) y de inversión de dependencias (DIP).
 
 ## 4. Clarificaciones
 
 No hay una transcripción de `/speckit-clarify`, así que no puedo citar preguntas textuales. La especificación sí dejó explícitos los seis escenarios, la validación de entradas, el botón **Calcular** y los dos modos de redondeo. 
 
-## 5. Diferencias entre ramas (Evidencia de comandos)
+## 5. Diferencias entre ramas
 
-El comando de auditoría ejecutado (`git diff vibe sdd --stat -- divisor_cuenta`) evidencia una divergencia de 52 archivos modificados/añadidos, con 5.442 inserciones y 390 eliminaciones. Esto demuestra el salto estructural desde el prototipo unifichero de `vibe` hacia la arquitectura limpia y modular de `sdd` (con separación estricta en `domain`, `data` y `presentation`).
+`git diff vibe sdd --stat -- divisor_cuenta` muestra 52 archivos, 5.442 inserciones y 390 eliminaciones. Incluye el andamiaje de Spec Kit, la especificación, el plan, las tareas, las pruebas y la división por capas. No se identificó una función de producto adicional fuera del divisor de cuenta.
 
 ## 6. Otra herramienta SDD y cuándo elegir vibe
 
