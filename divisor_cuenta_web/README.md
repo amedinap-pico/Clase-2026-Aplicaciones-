@@ -59,13 +59,11 @@ El comando habitual ejecuta ambas suites en secuencia:
 npm test
 ```
 
-1. **Dominio:** `node --test test/domain.test.js` ejecuta los casos de cálculo,
-   validación y sustitución de estrategias (LSP) con el runner integrado de
-   Node.js.
-2. **Interfaz:** si la suite de dominio pasa, el script ejecuta `vitest run`.
-   Vitest usa jsdom y Testing Library para verificar los valores iniciales,
-   los seis escenarios de aceptación, los mensajes de error, la accesibilidad
-   de los campos y las interacciones con el formulario.
+1. **Dominio:** Vitest recorre los seis casos de `test/casosDePrueba.js` en
+   `test/division.test.js`, además de LSP y validaciones.
+2. **Interfaz:** Vitest usa jsdom y Testing Library para verificar los tres
+   flujos de pantalla de `test/pantalla.test.jsx`. Los matchers de DOM se
+   configuran en `test/setup.js`.
 
 Si una suite falla, `npm test` termina con error y muestra la salida del runner
 que detectó el problema.
@@ -141,17 +139,23 @@ npm run preview
 src/
   domain/        # Cuenta, resultado, validación, cálculo y contrato
   data/          # Implementaciones de estrategias de redondeo
-  presentation/  # Pantalla, campos reutilizables y hook de interacción
+  presentation/  # Pantalla, campos, hook y formateador
   App.jsx        # Composición principal
   main.jsx       # Composición de dependencias y punto de entrada
 test/
-  domain.test.js   # Pruebas de reglas de dominio y estrategias
-  pantalla.test.jsx # Pruebas de interfaz e interacciones
+  casosDePrueba.js  # Los seis casos tomados de la spec
+  division.test.js  # Aceptación de dominio y LSP con Vitest
+  pantalla.test.jsx # Tres flujos de interfaz con Testing Library
+  setup.js          # Matchers de DOM para Vitest
 specs/
   001-dividir-cuenta/
+    spec.md          # Copia idéntica de la spec Flutter
     requirements.md # Requerimientos funcionales y aceptación
     analysis.md     # Separación entre QUÉ y CÓMO
+    plan.md         # Plan de implementación React
     tasks.md        # Tareas del Deber 2
+.specify/
+  memory/constitution.md # Principios SOLID adaptados a React/Vite
 ```
 
 La dirección de dependencias es **Presentación → Dominio ← Datos/Estrategias**:

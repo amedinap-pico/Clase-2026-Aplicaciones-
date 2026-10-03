@@ -1,107 +1,136 @@
-# Análisis de la especificación — Divisor de cuenta
+# Análisis de la especificación — Deber 2
 
-## Propósito y criterio de clasificación
+## Fuentes y método
 
-Este análisis toma como fuente la especificación Flutter
-[`divisor_cuenta/specs/001-split-bill/spec.md`](../divisor_cuenta/specs/001-split-bill/spec.md)
-y la compara con la especificación web
-[`specs/001-dividir-cuenta/requirements.md`](specs/001-dividir-cuenta/requirements.md).
+- Especificación de Flutter:
+  [`divisor_cuenta/specs/001-split-bill/spec.md`](../divisor_cuenta/specs/001-split-bill/spec.md).
+- Copia de trabajo React:
+  [`specs/001-dividir-cuenta/spec.md`](specs/001-dividir-cuenta/spec.md).
+- Constitución Flutter:
+  [`divisor_cuenta/.specify/memory/constitution.md`](../divisor_cuenta/.specify/memory/constitution.md).
+- Constitución React:
+  [`.specify/memory/constitution.md`](.specify/memory/constitution.md).
 
-- **QUÉ:** necesidad, comportamiento observable, reglas y restricciones del
-  producto, expresados sin comprometer una tecnología o estructura interna.
-- **CÓMO:** decisión de diseño, arquitectura, tecnología, organización del
-  código o mecanismo de verificación.
-- **MIXTO:** enunciado que combina el resultado que se requiere con una manera
-  concreta de implementarlo.
+Se cuentan enunciados semánticos atómicos: las repeticiones de la misma regla
+en distintas secciones se agrupan en una sola fila, pero se separan las reglas
+independientes que comparten una viñeta. La tabla contiene 28 enunciados. La
+clasificación QUÉ/CÓMO/MIXTO responde si cada idea sigue siendo válida en React;
+el estado de viaje distingue conservación literal de adaptación tecnológica.
 
-La unidad de conteo es cada enunciado atómico de la tabla. Se clasifican 23
-enunciados explícitos de la especificación original; contar por ideas atómicas
-evita ocultar decisiones mixtas dentro de párrafos largos.
+La copia `specs/001-dividir-cuenta/spec.md` se creó en esta revisión mediante
+copia directa de la fuente. Los SHA-256 comprobados fueron iguales:
 
-## Clasificación de enunciados de la spec
+```text
+Flutter: 011DF4F82AA270D6469C3B84F44F992E9048439C998CA284FA3A06452DAE7897
+React:   011DF4F82AA270D6469C3B84F44F992E9048439C998CA284FA3A06452DAE7897
+```
 
-| # | Enunciado resumido | Clasificación | Justificación |
-|---:|---|---|---|
-| 1 | Una persona necesita conocer la cuota individual de una cuenta con propina. | QUÉ | Expresa valor para quien usa el producto. |
-| 2 | 100.00, 4 personas, 10%, exacto → 27.50. | QUÉ | Resultado observable de aceptación. |
-| 3 | 90.00, 3 personas, 0%, exacto → 30.00. | QUÉ | Resultado observable de aceptación. |
-| 4 | Cero personas debe informar el error y no mostrar resultado. | QUÉ | Regla de validación visible. |
-| 5 | Monto no numérico debe informar “Monto inválido”. | QUÉ | Regla de validación visible. |
-| 6 | 10.00, 3 personas, 0%, exacto → 3.33. | QUÉ | Resultado observable de aceptación. |
-| 7 | Los mismos datos hacia arriba → 4.00. | QUÉ | Resultado observable de aceptación. |
-| 8 | Monto, personas, propina, selector y botón están en una sola pantalla. | MIXTO | El conjunto de controles es de interfaz (CÓMO); las entradas y la acción solicitadas expresan la capacidad (QUÉ). |
-| 9 | Exacto redondea la cuota al centavo más cercano. | QUÉ | Define la política monetaria visible, no su implementación. |
-| 10 | Hacia arriba redondea la cuota al entero monetario siguiente. | QUÉ | Define otra política visible. |
-| 11 | La cuota es igual por persona y no se redistribuyen residuos. | QUÉ | Define qué significa el resultado para cada persona. |
-| 12 | Monto y propina son números finitos no negativos; personas es entero positivo. | QUÉ | Reglas de validez del producto. |
-| 13 | Una entrada inválida muestra error y suprime el resultado. | QUÉ | Comportamiento observable frente a errores. |
-| 14 | El resultado visible tiene dos decimales. | QUÉ | Formato observable, independiente de biblioteca. |
-| 15 | No guardar datos ni requerir conexión. | QUÉ | Restricciones de producto y privacidad. |
-| 16 | Separar `domain`, `data` y `presentation`. | CÓMO | Asigna responsabilidades a capas. |
-| 17 | Mantener el dominio sin importar Flutter. | CÓMO | Restricción de dependencias de la arquitectura original. |
-| 18 | Implementar redondeos concretos como estrategias de datos. | CÓMO | Especifica dónde y mediante qué patrón organizar algoritmos. |
-| 19 | Componer estrategias desde el punto de entrada y orientar dependencias al dominio. | CÓMO | Describe ensamblaje e inversión de dependencias. |
-| 20 | La propina la ingresa la persona y puede ser cero. | QUÉ | Regla de entrada y rango permitido. |
-| 21 | Primero sumar propina, después dividir y finalmente redondear. | MIXTO | El orden produce una regla de negocio observable, pero también prescribe el algoritmo. |
-| 22 | Calcular al tocar el botón; usar los seis escenarios como fuente de pruebas. | MIXTO | La acción es comportamiento (QUÉ); vincular casos a una suite es proceso de verificación (CÓMO). |
-| 23 | La aplicación funciona sin conexión. | QUÉ | Atributo requerido del producto, no una elección de implementación específica. |
+Esto prueba que las dos copias son idénticas **ahora**. No demuestra que el diff
+inicial se hubiese guardado antes de iniciar el trabajo React; ese dato
+histórico no se registró.
 
-## Porcentajes del análisis
+## Spec: clasificación y viaje a React
 
-Con el conteo atómico anterior:
+| # | Enunciado atómico de la spec | Tipo | ¿Viaja? | Justificación |
+|---:|---|---|---|---|
+| 1 | La persona ingresa monto, personas y porcentaje de propina. | QUÉ | Intacto | Entradas de negocio; no dependen de plataforma. |
+| 2 | Al activar Calcular se muestra la cuota según el modo elegido. | QUÉ | Intacto | Acción y resultado observables. |
+| 3 | La app funciona sin conexión. | QUÉ | Intacto | Restricción de producto. |
+| 4 | 100, 4 personas, 10%, exacto → 27.50. | QUÉ | Intacto | Criterio numérico de aceptación. |
+| 5 | 90, 3 personas, 0%, exacto → 30.00. | QUÉ | Intacto | Criterio numérico de aceptación. |
+| 6 | 50, 0 personas → error de personas y sin resultado. | QUÉ | Intacto | Regla y salida observables. |
+| 7 | Monto no numérico → “Monto inválido”. | QUÉ | Intacto | Mensaje verificable. |
+| 8 | 10, 3 personas, 0%, exacto → 3.33. | QUÉ | Intacto | Criterio numérico de aceptación. |
+| 9 | Los mismos valores hacia arriba → 4.00. | QUÉ | Intacto | Criterio numérico de aceptación. |
+| 10 | Una sola pantalla contiene los campos, selector y botón. | QUÉ | Intacto | La misma pantalla es válida en React; no se especifica un widget Flutter. |
+| 11 | Exacto redondea la cuota al centavo más cercano. | QUÉ | Intacto | Política de negocio independiente del runner. |
+| 12 | Hacia arriba redondea al entero monetario siguiente. | QUÉ | Intacto | Política de negocio independiente del runner. |
+| 13 | El resultado es una cuota igual, no un arreglo de pagos residuales. | QUÉ | Intacto | Semántica observable del cobro. |
+| 14 | La suma de cuotas puede diferir del total por la política de redondeo. | QUÉ | Intacto | Consecuencia explícita del contrato. |
+| 15 | 10 entre 3 hacia arriba muestra 4 por persona, 12 en total, sin redistribuir. | QUÉ | Intacto | Ejemplo y límite explícitos. |
+| 16 | El monto es numérico, finito y no negativo. | QUÉ | Intacto | Validación de dominio. |
+| 17 | La propina es numérica, finita y no negativa. | QUÉ | Intacto | Validación de dominio. |
+| 18 | Personas es entero positivo. | QUÉ | Intacto | Validación de dominio. |
+| 19 | Ante datos inválidos se muestra mensaje y no resultado. | QUÉ | Intacto | Comportamiento de error. |
+| 20 | El resultado visible usa dos decimales. | QUÉ | Intacto | Formato observable. |
+| 21 | No se guarda información. | QUÉ | Intacto | Restricción de privacidad/alcance. |
+| 22 | `domain` reúne entidades, contrato, cálculo y validación; debe ser Dart puro. | MIXTO | Adaptado | Las responsabilidades viajan; Dart se reemplaza por JavaScript sin React/DOM. |
+| 23 | `data` aloja las implementaciones concretas de redondeo. | CÓMO | Adaptado | El patrón/capa se conserva; sintaxis e implementación pasan de Dart a JS. |
+| 24 | `presentation` coordina, formatea y dibuja la pantalla. | CÓMO | Adaptado | La responsabilidad se conserva; controller/widgets se traducen a hook/componentes. |
+| 25 | `main.dart` compone implementaciones y fija `presentation -> domain <- data`. | CÓMO | Adaptado | Se conserva la dirección; el punto de entrada web es `main.jsx`. |
+| 26 | La persona ingresa la propina y puede ingresar cero. | QUÉ | Intacto | Regla de entrada. |
+| 27 | Se agrega la propina, se divide y después se aplica redondeo. | QUÉ | Intacto | Regla de negocio; la traducción de sintaxis no altera su orden. |
+| 28 | Los seis escenarios de aceptación son fuente de las pruebas. | MIXTO | Adaptado | Los casos/resultados viajan; el archivo y runner Flutter se traducen a pruebas JS. |
 
-- QUÉ: `16 / 23 × 100 = 69.57%`
-- CÓMO: `4 / 23 × 100 = 17.39%`
-- MIXTO: `3 / 23 × 100 = 13.04%`
+### Porcentajes de viaje
 
-Comprobación: `69.57% + 17.39% + 13.04% = 100.00%` (la suma sin redondear es
-100%). Estos porcentajes describen **la distribución de los enunciados
-clasificados**, no la nota del deber, el porcentaje de código ni la cobertura de
-pruebas. Se pueden reproducir contando las filas de la tabla.
+Según la tabla y su denominador de 28 enunciados:
 
-## Análisis de la Constitution y adaptación a React/Vite
+- **Viajó intacto:** `23 / 28 × 100 = 82.14%`.
+- **Viajó con adaptación:** `5 / 28 × 100 = 17.86%`.
+- **No pudo reutilizarse:** `0 / 28 × 100 = 0%`.
 
-La Constitución fuente está en
-[`divisor_cuenta/.specify/memory/constitution.md`](../divisor_cuenta/.specify/memory/constitution.md).
-Su intención se conserva, pero las referencias de Flutter/Dart se traducen a
-React/JavaScript. Esta es una adaptación analítica para el proyecto web; no se
-afirma que exista una nueva Constitution formalmente ratificada.
+El 100% de las filas conserva utilidad semántica; cinco enunciados de diseño o
+prueba necesitan vocabulario/artefactos web. La métrica no afirma que se haya
+reutilizado código Dart. El porcentaje depende de la atomización declarada:
+las ideas duplicadas se agruparon para que no pesen doble.
 
-| Principio/restricción fuente | Adaptación web | Evidencia del proyecto | Evaluación |
-|---|---|---|---|
-| SRP: interfaz, entidades y reglas no mezcladas. | Componentes/hook en `presentation`, entidades y casos de uso en `domain`, estrategias en `data`. | `PantallaDivisor.jsx`, `useDivisor.js`, `Cuenta`, `ValidarEntrada`, `CalcularDivision`. | Separación visible por responsabilidad. |
-| OCP: extender políticas mediante estrategia. | El caso de uso usa el método `redondear`; el punto de entrada selecciona la implementación. | `CalcularDivision.calcular(cuenta, estrategia)` y composición de estrategias en `main.jsx`. | Admite una política nueva sin cambiar el cálculo, si cumple el contrato. |
-| LSP: implementaciones sustituibles con resultado válido. | `RedondeoExacto` y `RedondeoHaciaArriba` reciben una cuota y devuelven `Resultado`. | `src/data/` y prueba “el cálculo acepta estrategias intercambiables”. | La prueba demuestra sustitución funcional; no constituye prueba formal de todas las propiedades posibles del contrato. |
-| ISP: contratos pequeños. | La estrategia requiere solo `redondear(monto)`. | `src/domain/estrategiaRedondeo.js`. | Contrato acotado al consumidor. |
-| DIP: las dependencias apuntan al dominio. | Presentación consume servicios/modelos de dominio; las estrategias de datos implementan el contrato del dominio; `main.jsx` compone detalles. | Imports de `src/domain/`, `src/data/` y `src/main.jsx`. | El dominio no importa React ni presentación; el ensamblaje concreto está en el borde. |
-| Null safety de Dart. | JavaScript no ofrece la misma garantía estática; validar `Number.isFinite`, enteros y estrategia en tiempo de ejecución. | `ValidarEntrada` y guardas de `CalcularDivision`. | Adaptación funcional, no equivalencia de sistema de tipos. |
-| No agregar dependencias externas sin autorización. | Dependencias de producto permanecen React/Vite; Vitest/Testing Library/jsdom son herramientas de desarrollo para pruebas de interfaz. | `package.json`. | Se incorporó tooling de pruebas para cumplir la verificación automatizada solicitada; no se agrega servicio de ejecución al producto. |
-| No crear datos remotos sin fuente. | `data` contiene políticas de redondeo locales; no hay API, almacenamiento ni persistencia. | `src/data/`; no se hallan usos de almacenamiento ni `fetch` en `src/`. | Acorde al alcance. |
-| La cuota no debe prometer conservar el total. | Redondeo es por cuota; no se calculan pagos residuales. | Requerimiento RF-10 y escenario 6. | Para 10.00 entre 3, 4.00 × 3 = 12.00; el exceso se documenta como conducta intencional. |
-| Verificar aceptación y capas. | `npm test`, `npm run lint`, `npm run build`; pruebas de dominio y de presentación. | `test/domain.test.js`, `test/pantalla.test.jsx`, scripts de `package.json`. | La suite automatizada cubre ejemplos y validaciones; no reemplaza revisión visual en todos los navegadores/dispositivos. |
+### Porcentaje CÓMO de la spec y umbral de la materia
 
-### Cálculos de porcentaje y redondeo de aceptación
+En la clasificación de tipo hay 3 CÓMO de 28:
 
-La propina porcentual se aplica sobre el monto antes de dividir:
+`% CÓMO = 3 / 28 × 100 = 10.71%`.
+
+Las 2 filas MIXTAS se reportan aparte y no se cuentan como CÓMO, de acuerdo con
+la consigna. El 30% es el **umbral pedagógico de este deber**, no una regla
+universal de SDD. Con este conteo no se supera el umbral. Las decisiones
+tecnológicas explícitas identificadas son las capas y la arquitectura Dart; no
+se encontró una librería de estado Flutter prescrita por la spec.
+
+## Constitution: comparación regla por regla
+
+Estados: **idéntica** (mismo principio sin cambio semántico), **adaptada en
+redacción** (misma intención, vocabulario tecnológico distinto),
+**reemplazada** (la restricción anterior no aplica al proyecto nuevo), o
+**nueva** (requerida por la guía web sin equivalente explícito en la fuente).
+
+| Regla Flutter | Estado | Regla/adaptación React y evidencia |
+|---|---|---|
+| SRP: UI, entidades y servicio no mezclan responsabilidades monetarias. | Adaptada en redacción | Módulos React/domain separan interfaz, datos y reglas; `calcularDivision.js` calcula. |
+| OCP: políticas nuevas mediante estrategia sin cambiar política existente. | Idéntica | `CalcularDivision` recibe estrategia; implementaciones están en `src/data/`. |
+| LSP: estrategia válida devuelve resultado finito, no negativo y acorde a su política; no promete conservar suma. | Idéntica | Ambas estrategias satisfacen el contrato `aplicar`; hay prueba de sustitución y criterios de cuota. |
+| ISP: contratos solo exponen operaciones consumidas. | Idéntica | Contrato mínimo `aplicar(valor)`. |
+| DIP: presentación al dominio; dominio sin Flutter/UI/data. | Adaptada en redacción | Constitution React prohíbe React/DOM en domain y prescribe `presentation -> domain <- data`. |
+| Flutter y Dart con null safety. | Reemplazada | React/Vite y JavaScript son el runtime objetivo; la guía requiere Node y no existe null safety Dart en JS. Validación se realiza en runtime. |
+| Clases, variables y métodos en español. | Idéntica | UI, modelos, métodos y errores del proyecto permanecen en español; nombres de APIs/framework se conservan. |
+| No incorporar dependencias externas sin autorización. | Idéntica con excepción documentada | No hay dependencias de producto nuevas; las devDependencies Vitest, jsdom y Testing Library se añadieron para cumplir las pruebas web expresamente pedidas. |
+| Capas en `lib/...`; no crear infraestructura sin una fuente externa. | Adaptada en redacción | Se usan `src/...`; `data` contiene estrategias locales, sin API/base remota. |
+| Resultado es cuota uniforme, residuos no se redistribuyen. | Idéntica | RF-10 y caso 10/3 → 4.00 × 3 = 12.00. |
+| No modificar `test/`, `android/`, `ios/` salvo solicitud. | Reemplazada | Esas plataformas pertenecen a Flutter y no forman parte de este web project; las pruebas React sí se crean porque el deber lo exige. |
+| Correr `flutter analyze` y `flutter test`. | Adaptada en redacción | `npm run lint`, `npm test`, `npm run build`; pruebas nativas y de UI web. |
+| Gobierno: si se contradice un principio, explicar la excepción en plan. | Idéntica | Esta tabla y el plan documentan adaptaciones/excepciones; la Constitution no se declara ratificada por Spec Kit. |
+| “Nunca guardar secretos/API keys en Git”. | Nueva | Regla de seguridad explícitamente solicitada en la Constitution React del enunciado; la fuente Flutter no contiene regla equivalente. |
+| Toda función crítica debe tener pruebas; acceptance se vuelve ejecutable. | Nueva | Regla de calidad/pruebas requerida por la consigna web; la fuente Flutter solo exige las suites concretas en su flujo. |
+| El estudiante puede explicar toda función generada. | Nueva | Regla pedagógica explícita de la consigna web, sin equivalente literal en la Constitution Flutter. |
+| Capas `src/...`, domain JS puro y composición concreta en `main.jsx`. | Adaptada en redacción | Equivalentes web explícitos de capas/lib, Dart puro y composición `main.dart` del proyecto original. |
+
+Las tres reglas marcadas **nueva** no se atribuyen a la Constitución Flutter:
+se agregan porque el profesor las exige para la versión web. El archivo
+[`constitution.md`](.specify/memory/constitution.md) transcribe esos principios
+adaptados; no hay evidencia de haber ejecutado `/speckit-constitution`.
+
+## Cálculos de los criterios
+
+Fórmula:
 
 `total = monto × (1 + propina / 100)`  
 `cuota = total / personas`
 
-1. **Caso 1:** propina `100 × 10 / 100 = 10.00`; total `110.00`; cuota
-   `110.00 / 4 = 27.50`; exacto → `27.50`.
-2. **Caso 2:** propina `90 × 0 / 100 = 0.00`; total `90.00`; cuota
-   `90.00 / 3 = 30.00`; exacto → `30.00`.
-3. **Caso 3:** la división por cero personas no se realiza. La validación
-   retorna `Debe haber al menos una persona`.
-4. **Caso 4:** el texto no se convierte a un número finito; la validación
-   retorna `Monto inválido`.
-5. **Caso 5:** total `10.00`; cuota exacta `10 / 3 = 3.333…`; a centavos da
-   `3.33`.
-6. **Caso 6:** la misma cuota `3.333…` con `ceil` da `4.00`; cobro agregado
-   `4.00 × 3 = 12.00`. Frente al total de `10.00`, la diferencia es `2.00`,
-   equivalente a `2 / 10 × 100 = 20%` del monto base. No se ajusta el último
-   pago porque el requisito define una cuota uniforme, no una distribución.
-
-La diferencia entre `3.33` y `4.00` no es un error: son políticas de
-redondeo diferentes aplicadas al pago individual, como especifica RF-05, RF-06
-y RF-10.
+- Caso 1: `100 × (1 + 10/100) = 110`; `110 / 4 = 27.50`.
+- Caso 2: `90 × (1 + 0/100) = 90`; `90 / 3 = 30.00`.
+- Caso 3: se rechaza `personas = 0`; no se divide.
+- Caso 4: `abc` no produce un número finito; se informa `Monto inválido`.
+- Caso 5: `10 / 3 = 3.333…`; a centavos = `3.33`.
+- Caso 6: `ceil(10 / 3) = 4.00`; cobro agregado `4 × 3 = 12`; diferencia
+  `12 - 10 = 2`, es decir, `2/10 × 100 = 20%` del monto base. No es propina
+  adicional: es el efecto del redondeo de la cuota uniforme.

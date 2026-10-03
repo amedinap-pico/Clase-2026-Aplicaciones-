@@ -1,78 +1,101 @@
-# Bitácora de actividades — Deber 2
+# Bitácora — Deber 2
 
 **Proyecto:** `divisor_cuenta_web`  
-**Fecha de registro:** 2026-10-03  
-**Zona horaria de las horas anotadas:** local (UTC-05:00).  
-**Propósito:** registrar las actividades y verificaciones observadas en esta
-sesión y las anteriores del proyecto; no sustituye el historial de Git.
+**Fecha:** 2026-10-03
+**Horas locales:** UTC-05:00.
 
-## Registro de actividades
+## Métricas obligatorias
 
-| Hora aproximada | Actividad y resultado |
+| Métrica | Flutter (laboratorio) | React (este deber) | Evidencia/criterio |
+|---|---|---|---|
+| Minutos hasta primera compilación | No registrado | No registrado según el inicio oficial | La guía define inicio con `/speckit-plan`; ese inicio y el cronómetro no se registraron. Hubo builds exitosos, pero no tiempo transcurrido medido. |
+| Minutos hasta que pasan los seis casos | No registrado | No registrado | No se inició/detuvo cronómetro con el criterio definido en la guía. |
+| Iteraciones con el agente | No registrado | No registrado como métrica del estudiante | No hay registro contemporáneo que distinga correcciones del estudiante según la definición de la guía; no se infiere de los turnos. |
+| Líneas de código escritas a mano por el estudiante | No registrado | No registrado | Los archivos del proyecto se generaron/editaron con asistencia; no hay conteo verificable de ediciones manuales del estudiante. |
+| Enunciados de spec modificados | No registrado para el proceso inicial; 0 en la copia actual | 0 | `specs/001-dividir-cuenta/spec.md` es copia exacta de la fuente en la revisión actual; no se cambió ningún enunciado. No se afirma evidencia temporal previa. |
+| Enunciados de Constitution modificados | No aplica | No aplica como conteo de edición | La Constitution React se crea en este deber; no existía una versión web previa que se editara. Su comparación regla por regla está en `analisis_spec.md`. |
+| Líneas del plan React modificadas | No aplica | No aplica como edición de un plan React anterior | `plan.md` se crea en esta revisión; no existe línea base React previa. |
+| Casos de aceptación que pasan (0–6) | No registrado aquí | 6/6 | Los seis casos pasan en la suite parametrizada de dominio; la suite de pantalla automatiza además los tres flujos que exige la guía. |
+
+No se reemplazan los valores no medidos por estimaciones: la consigna pide
+“No registrado” cuando la medición no existe.
+
+## Actividades y evidencia de comandos
+
+La bitácora anterior registró actividades aproximadas del scaffold, documentos,
+implementación y configuración de pruebas. Esta tabla añade verificaciones
+reproducidas el 2026-10-03 durante la corrección crítica. Los resúmenes no se
+presentan como logs completos.
+
+| Momento local | Comando/verificación | Resultado observado |
+|---|---|---|
+| 14:05 | `npm test` | Node: 8 tests, 8 pass, 0 fail. Vitest: 1 test file, 6 tests passed. |
+| 14:05 | `npm run build` | Vite 8.3.2 transformó 27 módulos, generó `dist/` y terminó sin errores. |
+| 14:05 | `npm run lint` | Oxlint terminó con exit code 0, sin diagnósticos. |
+| 14:09 | Lectura de `Deber2.md` y comparación con archivos del proyecto | Se identificaron preguntas oficiales y brechas documentales/Spec Kit. |
+| 14:10 | Copia de `spec.md` y comparación SHA-256 | Copia Flutter/React: `011DF4F82AA270D6469C3B84F44F992E9048439C998CA284FA3A06452DAE7897` en ambos archivos. |
+| 14:10–14:12 | Creación de Constitución React, plan y revisión de respuestas/métricas | Archivos redactados; no se ejecutó Spec Kit CLI ni se modificó la spec copiada. |
+| 14:12–14:14 | Ajuste a la estructura de prueba de la guía | Se creó el formateador, se cambió el contrato a `aplicar(valor)`, se consolidó dominio/UI en Vitest, y se añadieron casos parametrizados y setup jest-dom. |
+| ~14:13 | `npm install --save-dev @testing-library/jest-dom` | Se añadieron matchers de DOM; auditoría de npm: 105 paquetes y 0 vulnerabilidades. |
+| 14:14 | `npm test`, `npm run lint`, `npm run build` | Vitest: 2 archivos, 12 pruebas aprobadas; Oxlint sin diagnósticos; Vite compiló 28 módulos sin errores. |
+| 14:14 | `git diff --no-index` de las dos specs | Salida vacía y código 0; hash SHA-256 idéntico. |
+| 14:14 | `git diff --check` | Detectó un espacio final en esta bitácora; se eliminó. |
+| 14:15 | `npm test` final | Vitest: 2 archivos, 12 pruebas aprobadas (9 de dominio y 3 de pantalla), 0 fallidas. |
+| 14:15 | `npm run lint` final | Oxlint terminó con exit code 0, sin diagnósticos. |
+| 14:15 | `npm run build` final | Vite 8.3.2 compiló 28 módulos; build de producción exitoso. |
+| 14:15 | `git diff --check` final y revisión de espacios | Exit code 0; no quedan errores de whitespace en cambios seguidos ni en Markdown revisados. |
+| 14:15 | `git grep` de imports React en domain | Sin coincidencias en `src/domain/`. |
+
+La comprobación de hash demuestra identidad actual, no que el diff inicial se
+haya capturado antes del trabajo React. Tampoco se generaron logs guardados en
+archivo para adjuntar; se registra aquí el resumen observable de las salidas.
+
+## Registro cronológico resumido
+
+| Hora aproximada | Actividad |
 |---|---|
-| 13:25 | Se inspeccionó la carpeta web vacía y el repositorio; se inicializó React + Vite con la plantilla React JavaScript. |
-| 13:26 | `npm install`: instaló dependencias; auditoría informó 0 vulnerabilidades. |
-| 13:27 | `npm run build` y `npm run lint`: scaffold inicial compiló y pasó lint. |
-| 13:28 | Se reemplazó la pantalla de bienvenida de Vite, se personalizó HTML/CSS y se preparó `src/data`, `src/domain` y `src/presentation`. |
-| 13:29 | `npm run lint` y `npm run build`: ambos comandos terminaron correctamente en la base personalizada. |
-| 13:36 | Se consultaron spec, plan, tareas, Constitution y código Flutter para crear documentación inicial del web. |
-| 13:37 | Se crearon `specs/001-dividir-cuenta/requirements.md`, `analysis.md` y `tasks.md`; se enlazaron desde README. |
-| 13:40 | Se implementaron modelos, validador, cálculo y estrategias de redondeo en JavaScript; se compuso el punto de entrada por inyección de dependencias. |
-| 13:41 | Se implementaron hook y componentes de presentación, incluyendo formulario, errores accesibles y resultado. |
-| 13:42 | Se añadió `test/domain.test.js` con el runner nativo de Node y script `npm test`. |
-| 13:43 | `npm test`: 8 pruebas de dominio aprobadas, 0 fallidas. `npm run lint` y `npm run build`: finalizaron sin errores. |
-| 13:43–13:44 | Se verificó en navegador el cálculo 27.50, los modos 3.33/4.00, errores de monto/personas y presentación en viewport móvil. |
-| 13:45 | Se añadió Vitest, Testing Library y jsdom como dependencias de desarrollo; se adaptó `npm test` para correr dominio y UI. |
-| 13:46 | `npm test`: 8 pruebas de dominio y 6 de interfaz aprobadas. `npm run lint` y `npm run build`: correctos. |
-| 13:49 | Se amplió el README con requisitos del runtime, instrucciones de instalación, ejecución y arquitectura. |
-| 13:53 | Se amplió la sección de calidad del README para describir las dos suites, lint y build. `npm test`: 8 pruebas de dominio y 6 de UI aprobadas. |
-| 13:57 | Se comparó README con `specs/`; se documentaron requerimientos, seis escenarios, límites, dirección de dependencias y trazabilidad. Se actualizó el estado de `tasks.md`. `npm test`: 8 de dominio y 6 de UI aprobadas. |
-| 13:58–14:00 | Se contrastaron fuentes Flutter, spec web, pruebas y Git para crear este análisis, respuestas y bitácora. Se dejó constancia explícita de las preguntas del profesor no incluidas y del estado sin seguimiento de los archivos. |
+| 13:25–13:29 | Scaffold de React/Vite, instalación y primeras verificaciones de build/lint. |
+| 13:36–13:37 | Lectura de artefactos Flutter y creación de requerimientos, análisis y tareas web iniciales. |
+| 13:40–13:44 | Implementación de dominio, estrategias, presentación y pruebas iniciales; validación de la app en navegador. |
+| 13:45–13:46 | Incorporación de Vitest, Testing Library y jsdom; suite mixta de dominio/interfaz. |
+| 13:49–13:57 | README extendido y comparación con `specs/`; pruebas automatizadas ejecutadas. |
+| 13:58–14:04 | Análisis, respuestas y bitácora iniciales. |
+| 14:04 | Commit local observado: `3f89f60`, documentación final previa. |
+| 14:05–14:15 | Auditoría contra `Deber2.md`, re-ejecución de calidad y creación/adaptación de los artefactos faltantes. |
 
-Las horas son aproximadas y reconstruidas de las marcas de tiempo disponibles
-en la conversación/herramientas. No indican duración de trabajo humano ni
-iteraciones del estudiante.
-
-## Comandos de calidad registrados
-
-| Comando | Evidencia registrada |
-|---|---|
-| `npm test` | Ejecutado después de la suite Node: 8 pruebas, 8 aprobadas, 0 fallidas. |
-| `npm test` | Ejecutado después de incorporar Vitest: Node 8/8 y Vitest 6/6 aprobadas. |
-| `npm run lint` | Finalizó sin errores en la implementación y en la configuración de pruebas. |
-| `npm run build` | Vite generó `dist/` sin errores tras la implementación y la configuración de pruebas. |
-| `npm run dev -- --host 127.0.0.1` | Servidor iniciado para comprobación de navegador y detenido al finalizar las verificaciones. |
-
-Estas verificaciones corresponden al código existente antes de crear los tres
-Markdown de entrega. Como esos cambios son solo documentación, no se volvió a
-ejecutar build después de crearlos.
+Las horas de actividades anteriores son aproximadas y se reconstruyeron a
+partir de la conversación. No significan minutos cronometrados de trabajo.
 
 ## Control de versiones
 
-- **Repositorio Git:** raíz `Clase-2026-Aplicaciones-`.
-- **Carpeta del proyecto:** `divisor_cuenta_web/`.
-- **Rama actual observada:** `sdd`.
-- **Otras ramas locales observadas:** `backend`, `main` y `vibe`.
-- **Estado al redactar:** los archivos del proyecto web aparecían como `??`
-  (untracked) en `git status --short --untracked-files=all -- .`.
-- **Commits propios de estos archivos:** ninguno observado; no se ejecutó
-  `git add`, `git commit`, push ni cambio de rama para esta entrega.
+- **Raíz Git:** `C:/Clase 2026 Aplicaciones/Clase-2026-Aplicaciones-`.
+- **Carpeta de proyecto:** `divisor_cuenta_web/`; no es un repositorio Git
+  independiente.
+- **Rama observada:** `sdd`, configurada para `origin/sdd`.
+- **Commit local de referencia al iniciar esta corrección:** `3f89f60`
+  (`feat: completar documentacion final, analisis de spec, bitacora y respuestas`).
+- En ese momento la rama estaba `ahead 1` respecto a `origin/sdd`; no se hizo
+  push como parte de esta corrección.
+- **Estado final observado:** 14 archivos modificados, 1 archivo eliminado
+  (suite Node reemplazada por Vitest) y 7 archivos nuevos sin seguimiento,
+  todos bajo `divisor_cuenta_web/`; ningún archivo de otro proyecto aparece en
+  el estado filtrado de esta entrega.
+- Los archivos de esta corrección (spec, Constitution, plan, respuestas,
+  bitácora, análisis y cambios relacionados en pruebas/código) quedan
+  pendientes de stage/commit. No se hizo commit final ni push.
 
-Por ese estado, los archivos están creados en el directorio de trabajo, pero
-aún no constan como cambios staged o committeados. La presencia de commits de
-sesión en `git log` no acredita que estos archivos formen parte de ellos.
+**Estado listo para commit:** antes de confirmar, revisar el `git status`
+actual, agregar solo los artefactos deseados y crear un commit descriptivo. No
+se afirma que la entrega esté sincronizada con GitHub.
 
-## Fuentes y límites de evidencia
+## Procesos Spec Kit y límites de evidencia
 
-- Especificación fuente:
-  [`divisor_cuenta/specs/001-split-bill/spec.md`](../divisor_cuenta/specs/001-split-bill/spec.md).
-- Constitution fuente:
-  [`divisor_cuenta/.specify/memory/constitution.md`](../divisor_cuenta/.specify/memory/constitution.md).
-- Requerimientos y tareas web:
-  [`specs/001-dividir-cuenta/requirements.md`](specs/001-dividir-cuenta/requirements.md),
-  [`specs/001-dividir-cuenta/tasks.md`](specs/001-dividir-cuenta/tasks.md).
-- Respuestas de la práctica Flutter anterior:
-  [`divisor_cuenta/respuestas.md`](../divisor_cuenta/respuestas.md).
-- No se encontró en el proyecto el enunciado literal de las seis preguntas,
-  registro de iteraciones del estudiante ni historia committeada de los
-  archivos web al momento de esta comprobación.
+- No se ejecutaron ni quedaron evidencias de `specify init`, `/speckit-plan`,
+  `/speckit-tasks`, `/speckit-analyze`, `/speckit-converge` o
+  `/speckit-constitution`.
+- `SPECIFY_FEATURE_DIRECTORY` no se configuró/registró en esta sesión.
+- La copia de spec se hizo ahora desde la ruta fuente real
+  `divisor_cuenta/specs/001-split-bill/spec.md`. El diff/hash actual es idéntico,
+  pero no se conservó una comprobación inicial antes de planificar.
+- No se encontraron el tiempo del cronómetro, conteo de iteraciones ni conteo
+  de líneas manuales del estudiante; se reportan como no registrados.

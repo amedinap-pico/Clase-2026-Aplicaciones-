@@ -2,7 +2,7 @@ import { Resultado } from './resultado.js'
 
 export class CalcularDivision {
   calcular(cuenta, estrategia) {
-    if (typeof estrategia?.redondear !== 'function') {
+    if (typeof estrategia?.aplicar !== 'function') {
       throw new TypeError('Se requiere una estrategia de redondeo válida.')
     }
 
@@ -12,7 +12,7 @@ export class CalcularDivision {
       throw new RangeError('El resultado del cálculo no se puede representar.')
     }
 
-    const resultado = estrategia.redondear(pagoSinRedondear)
+    const resultado = estrategia.aplicar(pagoSinRedondear)
     if (!Number.isFinite(resultado?.pagoPorPersona)) {
       throw new RangeError('El resultado del cálculo no se puede representar.')
     }

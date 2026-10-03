@@ -1,5 +1,8 @@
 import { useDivisor } from './useDivisor.js'
 import { CampoEntrada } from './CampoEntrada.jsx'
+import { FormateadorMoneda } from './formateadorMoneda.js'
+
+const formateador = new FormateadorMoneda()
 
 export function PantallaDivisor({
   calcularDivision,
@@ -89,7 +92,7 @@ export function PantallaDivisor({
           >
             <h2 id="result-title">Pago por persona</h2>
             <p className="result-amount">
-              {resultado.pagoPorPersona.toFixed(2)}
+              {formateador.formatear(resultado.pagoPorPersona)}
             </p>
           </section>
         )}

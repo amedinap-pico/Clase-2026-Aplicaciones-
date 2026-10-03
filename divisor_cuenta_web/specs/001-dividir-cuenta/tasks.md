@@ -8,6 +8,8 @@
 ## Preparación del proyecto
 
 - [x] Inicializar React + Vite e instalar dependencias.
+- [x] Copiar la spec Flutter original sin modificarla a `specs/001-dividir-cuenta/spec.md`.
+- [x] Documentar la adaptación de la Constitution y el plan React.
 - [x] Preparar las carpetas `src/data/`, `src/domain/` y
   `src/presentation/`.
 - [x] Verificar que la base inicial pasa `npm run lint` y `npm run build`.
@@ -29,6 +31,7 @@
 
 - [x] Construir el formulario en `src/presentation/` con etiquetas y controles
   para monto, personas, propina y modo de redondeo. *(RF-01, RF-02, RC-04)*
+- [x] Separar el formato de moneda en `src/presentation/formateadorMoneda.js`.
 - [x] Inicializar la propina en 10%, seleccionar modo exacto y dejar monto y
   personas sin valor. *(RF-01, RF-02)*
 - [x] Conectar **Calcular** con la validación y el cálculo; actualizar el estado
@@ -49,8 +52,8 @@
 - [x] Verificar los escenarios 5 y 6: diferencia entre redondeo exacto y hacia
   arriba; confirmar que se muestra una cuota uniforme sin redistribución.
   *(RF-05, RF-06, RF-09, RF-10)*
-- [x] Añadir y ejecutar pruebas automatizadas para las reglas de dominio con
-  Node.js y los escenarios de presentación con Vitest, jsdom y Testing Library.
+- [x] Parametrizar los seis casos y la prueba LSP con Vitest; probar tres flujos
+  de pantalla con Vitest, jsdom y Testing Library.
 - [x] Revisar que no haya persistencia ni solicitudes de red en el alcance
   implementado. *(RC-01, RC-02)*
 - [x] Ejecutar `npm test`, `npm run lint` y `npm run build`.
