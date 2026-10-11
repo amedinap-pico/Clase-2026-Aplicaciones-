@@ -65,3 +65,15 @@ Elegiría vibe para explorar un prototipo pequeño y desechable mientras se defi
 
 - Todos los artefactos de especificación, tareas y respuestas se encuentran completos, sin pendientes de ejecución y alineados con la Constitution y la Spec.
 - El archivo `respuestas.md` se encuentra debidamente integrado en la rama `main` y sincronizado en el repositorio remoto, al igual que las ramas de trabajo `sdd` y `vibe`.
+
+---
+
+# Respuestas — Deber 3
+
+1. **Rojo antes de verde.** En la prueba de propina de 150, `flutter test` esperaba `"La propina no puede superar el 100%"`, pero recibió `null`. Verla fallar antes de implementar la regla confirmó que la prueba detectaba el caso que faltaba.
+
+2. **Linter vs. IA.** Para observar el comportamiento indicado por la guía, agregué temporalmente una variable local sin uso y `print('hola')`. `flutter analyze` señaló `unused_local_variable` y `avoid_print`; retiré ambos ejemplos y el análisis final quedó limpio. El code smell elegido fue el número mágico `100` en el límite de propina. El linter comprueba reglas estáticas concretas, pero no necesariamente detecta decisiones de diseño o legibilidad como un número sin nombre.
+
+3. **Mi refactorización.** Elegí el número mágico del límite de propina. Lo reemplacé por la constante `_porcentajeMaximoPropina`, manteniendo la misma comparación y el mismo mensaje de error. Las 13 pruebas pasan antes y después del refactor, y `flutter analyze` no reporta problemas.
+
+4. **Coverage.** `lib/main.dart` tiene la cobertura de líneas más baja: 41,67 %. Eso no significa que tenga errores; indica que las pruebas ejecutaron una proporción menor de sus líneas. La cobertura mide ejecución, no corrección.
