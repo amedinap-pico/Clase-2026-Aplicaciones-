@@ -65,7 +65,6 @@ Elegiría vibe para explorar un prototipo pequeño y desechable mientras se defi
 
 - Todos los artefactos de especificación, tareas y respuestas se encuentran completos, sin pendientes de ejecución y alineados con la Constitution y la Spec.
 - El archivo `respuestas.md` se encuentra debidamente integrado en la rama `main` y sincronizado en el repositorio remoto, al igual que las ramas de trabajo `sdd` y `vibe`.
-
 ---
 
 # Respuestas — Deber 3
