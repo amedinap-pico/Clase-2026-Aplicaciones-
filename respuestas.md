@@ -15,11 +15,11 @@ El servidor rechaza `INC-999`, niveles no permitidos, motivos vacíos y alertas 
 ## Agente, conexión e instrucciones
 
 - **Agente usado:** asistente basado en Copilot SDK en VS Code para construir y revisar el servidor.
-- **Comprobación realizada:** `python -m pytest -vv` ejecutó siete pruebas y todas pasaron. En el Inspector descubrí las tres herramientas; confirmé la lista de casos, los seis eventos de `INC-002`, el error para `INC-999`, el registro válido, el duplicado y los rechazos del nivel y motivo inválidos. Desconecté y reconecté el servidor y pude registrar de nuevo la alerta, confirmando que el estado se reinicia. La captura obligatoria de las llamadas desde una conversación nueva de Copilot todavía está pendiente: el Inspector no sustituye esa evidencia.
+- **Comprobación realizada:** `python -m pytest -vv` ejecutó siete pruebas y todas pasaron. En el Inspector descubrí las tres herramientas; confirmé la lista de casos, los seis eventos de `INC-002`, el error para `INC-999`, el registro válido, el duplicado y los rechazos del nivel y motivo inválidos. Desconecté y reconecté el servidor y pude registrar de nuevo la alerta, confirmando que el estado se reinicia. En una conversación nueva el host inició una llamada a `listar_casos`, pero no devolvió su resultado; no pude verificar las consultas y el registro desde Copilot. La captura obligatoria `agente_tools.png` sigue pendiente y no se reemplaza por evidencia del Inspector.
 - **Instalación:** con Python 3.11 o superior, ejecutar `python -m pip install "mcp[cli]>=2,<3" pytest`.
 - **Pruebas:** desde la raíz del repositorio, ejecutar `python -m pytest mcp-detective -vv`.
 - **Inspector:** desde la raíz, ejecutar `mcp dev mcp-detective/server.py`. En el Inspector, descubrir las tres tools y probar D1–D7; repetir el registro antes y después de reiniciar el proceso para verificar el estado en memoria.
-- **Conexión del host:** el archivo `.vscode/mcp.json` configura el servidor por stdio usando `python` y la ruta del workspace. En VS Code, inicia o reinicia el servidor MCP, abre una conversación nueva, confirma el descubrimiento y pídele las tres consultas del deber. Guarda una captura de las llamadas reales y sus resultados como `evidencias/agente_tools.png`.
+- **Conexión del host:** `.vscode/mcp.json` en la raíz y `mcp-detective/.vscode/mcp.json` configuran el servidor por stdio para el workspace raíz o para abrir directamente la carpeta del servidor. Inicia o reinicia el servidor MCP en VS Code, abre una conversación nueva y comprueba que las llamadas terminan con resultados; guarda la traza real como `evidencias/agente_tools.png`.
 
 ## Evidencias
 
