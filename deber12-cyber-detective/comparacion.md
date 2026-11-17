@@ -2,126 +2,37 @@
 
 ## Estado de la evaluación
 
-La comparación experimental todavía está pendiente. En la preparación de esta
-sesión se encontró Codex CLI, pero las cuatro invocaciones (`B`, `C`, `M5 sin
-skill`, `M5 con skill`) terminaron antes de crear una sesión porque esa terminal
-devolvió `Error finding codex home: Could not find home directory`. No se obtuvo
-ninguna respuesta de modelo de esas invocaciones. No se rellenan resultados
-supuestos ni se usan los análisis anteriores como corridas independientes.
+Se ejecutaron sesiones nuevas con Codex CLI el 17 de noviembre de 2026. Cada prueba fue un proceso `codex exec --ephemeral --json --sandbox read-only`; los M5 se ejecutaron en dos repositorios temporales separados, uno sin instalación del skill y otro con `incident-investigator`. Los prompts de M5 y las opciones del CLI fueron iguales; cambió la disponibilidad del skill.
 
-Para Codex, el skill de proyecto está en `.agents/skills/incident-investigator/`.
-La prueba requiere chats nuevos en el workspace correcto; cada chat conserva su
-propio transcript. La IDE usa la carpeta abierta como contexto local. En la
-CLI, `codex exec --json` permite guardar eventos JSONL cuando el ejecutable
-puede iniciar sesión correctamente. Véase [estado de trazas](evidencias/estado-y-limitaciones.md).
+Para proteger el campo `token=`, se usó una copia temporal del CSV en la que se sustituyó únicamente su valor por un marcador sintético. La copia entregada `logs_sinteticos.csv` no se modificó y su valor original no se envió al modelo. Esto permite observar si se oculta un valor con forma de token, pero no prueba el manejo del valor original. Las trazas guardadas en el proyecto omiten salidas de herramientas y solo conservan metadatos de eventos; no contienen el marcador.
 
-## Preparar las condiciones
+Las sesiones y sus identificadores están en [trazas-de-sesion.md](evidencias/trazas-de-sesion.md); el registro JSONL resumido está en [trazas-ejecucion.jsonl](evidencias/trazas-ejecucion.jsonl). El CLI no ofrece un campo de evento dedicado que diga “skill activado”; la activación se evaluó observando lecturas de `SKILL.md` y `detection-rules.md` en la traza.
 
-En PowerShell, desde cualquier carpeta dentro del repositorio, crea dos
-directorios temporales. El de control contiene solo el CSV; el otro contiene el
-mismo CSV y la copia del skill usada por Codex. No abras una sesión antes de
-prepararlos.
+## Prompts ejecutados
 
-```powershell
-$repo = (git rev-parse --show-toplevel | Select-Object -First 1).Trim()
-$project = Join-Path $repo 'deber12-cyber-detective'
-$runRoot = Join-Path $env:TEMP ('cyber-detective-eval-' + [guid]::NewGuid().ToString('N'))
-$sinSkill = Join-Path $runRoot 'sin-skill'
-$conSkill = Join-Path $runRoot 'con-skill'
-New-Item -ItemType Directory -Force -Path $sinSkill, $conSkill | Out-Null
-
-Copy-Item -LiteralPath (Join-Path $project 'logs_sinteticos.csv') -Destination $sinSkill
-Copy-Item -LiteralPath (Join-Path $project 'logs_sinteticos.csv') -Destination $conSkill
-
-$skillDestino = Join-Path $conSkill '.agents\skills\incident-investigator'
-New-Item -ItemType Directory -Force -Path (Join-Path $skillDestino 'references') | Out-Null
-Copy-Item -LiteralPath (Join-Path $project '.agents\skills\incident-investigator\SKILL.md') -Destination $skillDestino
-Copy-Item -LiteralPath (Join-Path $project '.agents\skills\incident-investigator\references\detection-rules.md') -Destination (Join-Path $skillDestino 'references')
-
-$hashSin = (Get-FileHash (Join-Path $sinSkill 'logs_sinteticos.csv') -Algorithm SHA256).Hash
-$hashCon = (Get-FileHash (Join-Path $conSkill 'logs_sinteticos.csv') -Algorithm SHA256).Hash
-"El CSV es idéntico en ambas carpetas: $($hashSin -eq $hashCon)"
-```
-
-En la IDE, abre cada directorio como carpeta/workspace y crea un chat nuevo
-para cada ejecución. En `sin-skill`, comprueba que `incident-investigator` no
-aparezca en las skills disponibles; si aparece por una instalación de usuario,
-esa condición no es válida. En `con-skill`, comprueba que sí aparezca. No
-incluyas `hallazgos.md`, respuestas anteriores ni el skill en la carpeta de
-control.
-
-Haz cada prompt en un chat separado, sin continuar otro chat:
-
-| Prueba | Carpeta | Prompt exacto |
+| Prueba | Condición | Prompt |
 |---|---|---|
-| B — contextual | `con-skill` | `Revisa estos registros de autenticación. ¿Ves intentos sospechosos, cambios no aprobados o posibles secretos expuestos? Cita las filas que respaldan cada alerta.` |
-| C — control negativo | `con-skill` | `Muéstrame cuántos eventos hay por hora en este CSV; no investigues incidentes ni clasifiques amenazas.` |
-| M5 — sin skill | `sin-skill` | `Investiga los logs sintéticos, identifica incidentes justificables y distingue señales de seguridad de actividad normal. Devuelve evidencia concreta.` |
-| M5 — con skill | `con-skill` | `Investiga los logs sintéticos, identifica incidentes justificables y distingue señales de seguridad de actividad normal. Devuelve evidencia concreta.` |
+| A — explícita | Skill disponible | `Usa explícitamente el skill incident-investigator para analizar logs_sinteticos.csv. Aplica sus reglas, cita las filas que sustentan cada hallazgo y redacta cualquier valor token.` |
+| B — contextual | Skill disponible | `Revisa estos registros de autenticación. ¿Ves intentos sospechosos, cambios no aprobados o posibles secretos expuestos? Cita las filas que respaldan cada alerta.` |
+| C — control negativo | Skill disponible | `Muéstrame cuántos eventos hay por hora en este CSV; no investigues incidentes ni clasifiques amenazas.` |
+| M5 — sin skill | Skill ausente | `Investiga los logs sintéticos, identifica incidentes justificables y distingue señales de seguridad de actividad normal. Devuelve evidencia concreta.` |
+| M5 — con skill | Skill disponible | El mismo prompt de M5 — sin skill. |
 
-Para la comparación M5 mantén el mismo modelo, ajustes y prompt; la única
-condición que debe cambiar es la presencia del skill. Guarda las respuestas y
-las trazas reales. Si usas `codex exec --json`, cada llamada debe ser un proceso
-nuevo y su salida JSONL debe guardarse en un archivo aparte. Revisa y redacta
-cualquier `token=` en una copia antes de agregar evidencia al PR; conserva las
-trazas originales solo en una ubicación temporal privada.
+## Resultados de la Prueba B y del control C
 
-## Resultados observados
+**B — contextual.** La sesión respondió con fuerza bruta candidata en las filas 17, 19–20, 22–23 y 25–27, éxito posterior en la 28, password spraying en las filas 67, 68, 70, 71, 73 y 74, posible token en la fila 33 con el valor oculto y cambio de rol no aprobado en la fila 59. La traza incluye referencias de lectura al skill y sus reglas. Presentó los eventos como indicios, señaló los pares duplicados y no atribuyó autoría.
 
-No se obtuvo una respuesta de Codex para B, C ni M5: las invocaciones locales
-terminaron antes de crear una sesión. Por eso la tabla evalúa honestamente el
-estado actual como **no evaluable**, no como una comparación completada. El
-conteo local de C se incluye aparte como comprobación de los datos, no como
-prueba de que Codex evitó activar el skill.
+**C — control negativo.** La respuesta contó 63 eventos entre 01:00–01:59 y 30 entre 02:00–02:59, para 93 registros en total (UTC−05:00). No clasificó amenazas. El skill estaba disponible en esa carpeta, pero la traza no contiene referencias de lectura a `SKILL.md` ni a `detection-rules.md`. Esto es evidencia observable de que no se leyó el skill en esa sesión; el CLI no expone otro indicador interno de activación.
 
-| Dimensión | Sin skill | Con skill | Evidencia / comentario |
+## Comparación M5
+
+| Dimensión | Sin skill | Con skill | Evidencia observada |
 |---|---|---|---|
-| ¿Usó un procedimiento reproducible? | No evaluable: no se inició una sesión sin skill. | No evaluable: no se inició una sesión con skill. | Las cuatro llamadas terminaron con `Could not find home directory` antes de obtener respuesta. |
-| ¿Citó filas concretas? | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | No atribuir a estas condiciones las filas citadas en el análisis previo. |
-| Alertas sustentadas | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | Usar la referencia objetiva de abajo para puntuar las corridas futuras. |
-| Falsos positivos detectados o evitados | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | Revisar si cada respuesta excluye los tres fallos de Maria y `healthcheck`. |
-| ¿Ocultó posibles tokens? | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | No se reproduce el valor de la fila 33. |
-| ¿Reconoció incertidumbre? | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | Revisar si cada respuesta trata los pares idénticos como una limitación. |
-| ¿Qué hizo gracias al skill? | No aplica. | No evaluable: no hubo sesión con skill ni traza de lectura. | La disponibilidad del skill en otra conversación no demuestra su uso en estas corridas. |
+| Procedimiento reproducible | Sesión nueva; no había skill en el repositorio temporal ni en el perfil global. | Sesión nueva; skill instalado en `.agents/skills/incident-investigator/` y leído en la traza. | Un proceso efímero por condición, mismo prompt, mismo CSV sanitizado y opciones por defecto del mismo CLI. |
+| Filas y evidencia | Citó las filas 57 y 59 para el cambio de rol, 17–28 para los intentos contra `admin`, y las filas de spraying. | Citó las mismas secuencias y especificó el detalle de cada patrón. | Ambas respuestas enlazaron sus afirmaciones a filas concretas. |
+| Clasificación de alertas | Identificó los cuatro patrones, pero llamó “incidente confirmado” al cambio de rol. | Llamó a las alertas patrones probables o cambios no aprobados “según el registro”. | El skill mantuvo la distinción entre lo que indica el log y un incidente confirmado. |
+| Falsos positivos | Trató los tres fallos de Maria y los `healthcheck` como actividad normal o insuficiente. | También excluyó esos eventos de las alertas. | En estas corridas ambas respuestas evitaron clasificar los casos de control como amenazas. |
+| Ocultamiento del token | La respuesta original reprodujo el marcador sintético; la copia guardada para evidencia lo oculta. | La respuesta mostró `[REDACTED]`. | El valor original nunca se envió. El resultado solo compara el tratamiento del marcador de prueba. |
+| Incertidumbre y límites | Reconoció límites de autoría, aunque su etiqueta “incidente confirmado” fue más fuerte que la evidencia. | Señaló que los pares de fallos idénticos podrían ser duplicados y evitó atribuir intención o autoría. | La respuesta con skill fue más cauta sobre severidad y duplicados; una ejecución por condición no permite generalizar estadísticamente. |
 
-## Resultados de B y C
-
-| Prueba | Resultado | Qué demuestra / qué no demuestra |
-|---|---|---|
-| B — contextual | Se revisaron los datos del CSV en esta conversación: fuerza bruta candidata, spraying, marcador de token y cambio de rol con las filas listadas en la referencia. | Confirma las filas del archivo, pero el contexto de esta conversación ya contenía análisis del skill. No es una sesión limpia y no demuestra que el skill se activara por su `description`. |
-| C — control negativo | El conteo local de PowerShell dio 63 eventos en 01:00 y 30 en 02:00 (UTC−05:00), 93 en total. | Confirma los datos del CSV. No prueba que Codex no activó el skill, porque la cuenta la hizo PowerShell y las invocaciones de Codex fallaron antes de iniciar. |
-
-## Referencia objetiva del CSV para calificar las respuestas
-
-Estos son resultados verificados contra el CSV original; **no son respuestas de
-las sesiones comparadas**:
-
-- Fuerza bruta probable por conteo de registros: filas 17, 19, 20, 22, 23, 25,
-  26 y 27, entre 01:14 y 01:18; éxito posterior en fila 28. Las parejas 19/20,
-  22/23 y 25/26 son idénticas. Si fueran duplicados de ingesta quedarían cinco
-  registros distintos, por lo que el informe debe conservar esa incertidumbre.
-- Password spraying probable: filas 67, 68, 70, 71, 73 y 74, seis usuarios
-  distintos de una IP dentro de la ventana.
-- Posible exposición de token: fila 33. No reproducir su valor; usar
-  `[REDACTED]`.
-- Cambio de rol con `approved=false`: fila 59.
-- Las filas 38, 39 y 41 son tres fallos de Maria, menos que el umbral de seis;
-  la fila 42 es un éxito posterior, no convierte los tres fallos en fuerza
-  bruta. Los `healthcheck` de las filas 78 y 80–84 no son `login/failed`.
-- Para el control descriptivo C, el conteo de referencia es 63 eventos en la
-  hora 01:00 y 30 en la hora 02:00 (UTC−05:00).
-
-## Conclusión actual
-
-No se puede afirmar una mejora ni una diferencia entre condiciones: no hubo
-salidas válidas de M5. El conteo de C sí está comprobado contra el CSV, pero no
-es una respuesta de Codex y no prueba la no activación del skill. El análisis de
-`hallazgos.md` sirve como referencia de filas, no como salida de una corrida
-con o sin skill. Por ello, esta evaluación no demuestra experimentalmente el
-aporte del skill; las respuestas y trazas de las sesiones nuevas deben
-incorporarse cuando se ejecuten en la IDE.
-
-Incluso con una corrida válida por condición, la comparación será didáctica y
-no estadística. Si no hay una traza visible de lectura, no atribuyas al skill
-una respuesta correcta solo porque coincide con sus reglas; declara esa
-incertidumbre.
+En esta comparación, ambas condiciones detectaron patrones similares y citaron filas. La diferencia más clara fue el cuidado al calificar el cambio de rol y al redactar el marcador de token. Es una evaluación didáctica de una corrida por condición, no una medición estadística. El resumen de las trazas registra lecturas del skill en B y M5 con skill, y ninguna lectura en C ni M5 sin skill.
