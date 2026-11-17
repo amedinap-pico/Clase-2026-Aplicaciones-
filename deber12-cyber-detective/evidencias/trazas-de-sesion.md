@@ -66,8 +66,10 @@ descubrimiento de skills a nivel de proyecto. Se compararon los SHA-256 de
 ambas copias. La sesión actual no recargó su catálogo después de crear esa
 ubicación, así que su detección debe comprobarse en una sesión nueva.
 
-No se usaron servicios externos, no se consultaron las IP y no se fabricaron
-capturas, salidas de sesiones ni activaciones.
+Durante el análisis del CSV no se usaron servicios externos ni se consultaron
+las IP. Para redactar los pasos de Codex se consultó documentación oficial de
+OpenAI; esa consulta no accedió a las IP del CSV. No se fabricaron capturas ni
+salidas de sesiones.
 
 ## Continuación: disponibilidad del skill
 
@@ -78,3 +80,15 @@ instrucciones ya leídas para esta tarea. Esto confirma que el skill está
 disponible en esta conversación; no es una activación contextual limpia,
 porque el historial ya incluía el enunciado, la creación del skill y su
 investigación. No sustituye las dos sesiones independientes de la comparación.
+
+## Intento de sesiones independientes desde la terminal
+
+Se localizó Codex CLI `0.169.0-alpha.11.1` y se prepararon copias temporales
+del CSV con SHA-256 idéntico: una carpeta solo con el CSV y otra con el CSV y
+`.agents/skills/incident-investigator/`. Se intentaron cuatro procesos
+independientes con `codex exec --ephemeral --json --sandbox read-only` para B,
+C y las dos condiciones M5. Los cuatro terminaron con código 1 antes de iniciar
+una sesión: `Error finding codex home: Could not find home directory`. El
+proceso de la terminal no tenía `HOME` definido. No hubo respuestas de modelo,
+IDs de sesión ni trazas de actividad que registrar; este intento no cuenta como
+prueba B, C o M5. No se copiaron trazas temporales al PR.

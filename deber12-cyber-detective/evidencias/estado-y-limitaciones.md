@@ -46,3 +46,14 @@ Para completar B, C y la comparación, inicia sesiones nuevas con y sin el skill
 conserva sus respuestas o trazas reales y reemplaza los estados pendientes. La
 lectura manual de archivos no sustituye esas pruebas. No se fabricaron capturas,
 invocaciones ni resultados.
+
+## Intento de ejecución CLI desde esta terminal
+
+Se encontró Codex CLI `0.169.0-alpha.11.1`. Sin embargo, las cuatro llamadas
+preparadas con `codex exec --json` terminaron antes de iniciar un agente con el
+error `Error finding codex home: Could not find home directory`. En este proceso
+`HOME` no estaba definido; `USERPROFILE` sí estaba definido. No se generaron
+respuestas de modelo ni trazas de sesiones B, C o M5. Este error describe esta
+terminal auxiliar; no demuestra que la IDE de Codex de la usuaria carezca de
+trazas o no pueda iniciar esas sesiones. Los estados de la tabla anterior siguen
+pendientes hasta ejecutarlos en la IDE con chats nuevos.
