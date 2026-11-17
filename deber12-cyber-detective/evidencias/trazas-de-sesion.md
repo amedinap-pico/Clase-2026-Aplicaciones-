@@ -92,3 +92,14 @@ una sesión: `Error finding codex home: Could not find home directory`. El
 proceso de la terminal no tenía `HOME` definido. No hubo respuestas de modelo,
 IDs de sesión ni trazas de actividad que registrar; este intento no cuenta como
 prueba B, C o M5. No se copiaron trazas temporales al PR.
+
+## Revisión de filas y conteo solicitados ahora
+
+En esta solicitud se hizo una nueva lectura local del CSV. La salida resumida
+confirmó ocho registros `login/failed` para `admin` en las filas 17, 19, 20, 22,
+23, 25, 26 y 27 entre 01:14 y 01:18, con la fila 28 como éxito posterior; seis
+usuarios distintos de la IP del spraying en las filas 67, 68, 70, 71, 73 y 74;
+marcador `token=` en fila 33 (valor suprimido); cambio de rol en fila 59; y tres
+fallos de Maria en las filas 38, 39 y 41. Se contaron 63 eventos para la hora
+01:00 y 30 para 02:00 (UTC−05:00). Esta fue una comprobación local de datos, no
+una sesión nueva del agente ni evidencia de activación del skill.

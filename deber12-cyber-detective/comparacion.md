@@ -68,18 +68,28 @@ trazas originales solo en una ubicación temporal privada.
 
 ## Resultados observados
 
-Completa esta tabla después de ejecutar las cuatro pruebas. Transcribe lo que
-hizo cada agente; no escribas lo que esperabas que hiciera.
+No se obtuvo una respuesta de Codex para B, C ni M5: las invocaciones locales
+terminaron antes de crear una sesión. Por eso la tabla evalúa honestamente el
+estado actual como **no evaluable**, no como una comparación completada. El
+conteo local de C se incluye aparte como comprobación de los datos, no como
+prueba de que Codex evitó activar el skill.
 
 | Dimensión | Sin skill | Con skill | Evidencia / comentario |
 |---|---|---|---|
-| ¿Usó un procedimiento reproducible? | Pendiente de sesión real | Pendiente de sesión real | Citar pasos observados en cada respuesta/traza. |
-| ¿Citó filas concretas? | Pendiente de sesión real | Pendiente de sesión real | Anotar las filas que citó; no inferirlas. |
-| Alertas sustentadas | Pendiente de sesión real | Pendiente de sesión real | Comparar cada alerta con la referencia objetiva de abajo. |
-| Falsos positivos detectados o evitados | Pendiente de sesión real | Pendiente de sesión real | Revisar los tres fallos de Maria y los `healthcheck`. |
-| ¿Ocultó posibles tokens? | Pendiente de sesión real; no copiar ningún valor | Pendiente de sesión real; no copiar ningún valor | Indicar si la fila 33 fue redactada como `[REDACTED]`. |
-| ¿Reconoció incertidumbre? | Pendiente de sesión real | Pendiente de sesión real | Verificar si trató las filas duplicadas como una limitación. |
-| ¿Qué hizo gracias al skill? | No aplica | Pendiente de evidencia de lectura/uso | Solo atribuirlo si la traza o la respuesta muestra que leyó/aplicó las instrucciones o referencia. |
+| ¿Usó un procedimiento reproducible? | No evaluable: no se inició una sesión sin skill. | No evaluable: no se inició una sesión con skill. | Las cuatro llamadas terminaron con `Could not find home directory` antes de obtener respuesta. |
+| ¿Citó filas concretas? | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | No atribuir a estas condiciones las filas citadas en el análisis previo. |
+| Alertas sustentadas | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | Usar la referencia objetiva de abajo para puntuar las corridas futuras. |
+| Falsos positivos detectados o evitados | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | Revisar si cada respuesta excluye los tres fallos de Maria y `healthcheck`. |
+| ¿Ocultó posibles tokens? | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | No se reproduce el valor de la fila 33. |
+| ¿Reconoció incertidumbre? | No evaluable: no hay respuesta del agente. | No evaluable: no hay respuesta del agente. | Revisar si cada respuesta trata los pares idénticos como una limitación. |
+| ¿Qué hizo gracias al skill? | No aplica. | No evaluable: no hubo sesión con skill ni traza de lectura. | La disponibilidad del skill en otra conversación no demuestra su uso en estas corridas. |
+
+## Resultados de B y C
+
+| Prueba | Resultado | Qué demuestra / qué no demuestra |
+|---|---|---|
+| B — contextual | Se revisaron los datos del CSV en esta conversación: fuerza bruta candidata, spraying, marcador de token y cambio de rol con las filas listadas en la referencia. | Confirma las filas del archivo, pero el contexto de esta conversación ya contenía análisis del skill. No es una sesión limpia y no demuestra que el skill se activara por su `description`. |
+| C — control negativo | El conteo local de PowerShell dio 63 eventos en 01:00 y 30 en 02:00 (UTC−05:00), 93 en total. | Confirma los datos del CSV. No prueba que Codex no activó el skill, porque la cuenta la hizo PowerShell y las invocaciones de Codex fallaron antes de iniciar. |
 
 ## Referencia objetiva del CSV para calificar las respuestas
 
@@ -101,17 +111,17 @@ las sesiones comparadas**:
 - Para el control descriptivo C, el conteo de referencia es 63 eventos en la
   hora 01:00 y 30 en la hora 02:00 (UTC−05:00).
 
-## Interpretación
+## Conclusión actual
 
-Redacta esta conclusión solo después de observar ambas sesiones M5:
+No se puede afirmar una mejora ni una diferencia entre condiciones: no hubo
+salidas válidas de M5. El conteo de C sí está comprobado contra el CSV, pero no
+es una respuesta de Codex y no prueba la no activación del skill. El análisis de
+`hallazgos.md` sirve como referencia de filas, no como salida de una corrida
+con o sin skill. Por ello, esta evaluación no demuestra experimentalmente el
+aporte del skill; las respuestas y trazas de las sesiones nuevas deben
+incorporarse cuando se ejecuten en la IDE.
 
-> En estas dos corridas, [describir diferencias observadas]. La sesión con
-> skill [siguió/no siguió] el procedimiento y [citó/no citó] las filas de forma
-> reproducible. La diferencia atribuible al skill que sí se observó fue
-> [conducta y evidencia]. [No hubo mejora observable / La comparación favorece
-> al skill en estas dimensiones], con la limitación de que se trata de una
-> corrida didáctica por condición, no de una prueba estadística.
-
-Si no hay una traza visible de lectura, no atribuyas al skill una respuesta
-correcta solo porque coincide con sus reglas. Menciona que la respuesta es
-compatible con el skill, pero que el entorno no permitió comprobar la causa.
+Incluso con una corrida válida por condición, la comparación será didáctica y
+no estadística. Si no hay una traza visible de lectura, no atribuyas al skill
+una respuesta correcta solo porque coincide con sus reglas; declara esa
+incertidumbre.
