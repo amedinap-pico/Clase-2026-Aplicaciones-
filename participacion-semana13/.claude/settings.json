@@ -1,0 +1,18 @@
+﻿{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Edit|Write|Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${env:CLAUDE_PROJECT_DIR}/.claude/hooks/proteger_env.py\"",
+            "shell": "powershell",
+            "timeout": 10,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ]
+  }
+}

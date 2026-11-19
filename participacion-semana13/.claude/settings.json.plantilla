@@ -1,0 +1,12 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "COMPLETA: herramientas de lectura, edición, escritura y shell",
+        "hooks": [
+          { "type": "command", "command": "python .claude/hooks/proteger_env.py" }
+        ]
+      }
+    ]
+  }
+}
