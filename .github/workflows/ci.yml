@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
-          channel: stable
+          flutter-version: 3.47.1
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
@@ -40,7 +40,7 @@ jobs:
           persist-credentials: false
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with:
-          channel: stable
+          flutter-version: 3.47.1
       - run: flutter pub get
       - run: flutter build apk --debug
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
