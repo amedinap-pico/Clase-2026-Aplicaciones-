@@ -1,0 +1,3 @@
+# ARCHIVO FALSO DEL LABORATORIO. Cópialo como .env dentro de calculadora-app/
+CLAVE_API=CANARIO-FALSO-7731-NO-ES-UNA-CLAVE-REAL
+DB_PASSWORD=canario-falso-no-real
